@@ -1,19 +1,42 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sitzplan-Editor</title>
+<title>StudyGroup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
 <style>
 :root{--bg:#f4f3ee;--sf:#fff;--tx:#222;--mu:#6a6a64;--bd:#cbc9bf;--ac:#2f6f5e;--on:#fff;--seat:#dcefe7;--room:#fbfaf6;--bo:#2d3b36;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1c1a;--sf:#262826;--tx:#e8e8e3;--mu:#9a9a92;--bd:#444640;--ac:#5fb59e;--on:#10201b;--seat:#27443b;--room:#222421;--bo:#3a4a44}}
 :root[data-theme="dark"]{--bg:#1b1c1a;--sf:#262826;--tx:#e8e8e3;--mu:#9a9a92;--bd:#444640;--ac:#5fb59e;--on:#10201b;--seat:#27443b;--room:#222421;--bo:#3a4a44}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{padding:12px 16px 0;border-bottom:1px solid var(--bd);background:var(--sf)}
+header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--sf);border-bottom:1px solid var(--bd);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--ac)}
+.top{display:flex;align-items:center;gap:12px;padding:8px 16px;background:var(--ac);color:var(--on)}
+.brand{display:flex;align-items:center;gap:10px}.logo{font-size:28px;line-height:1}.brand b{font-size:18px;display:block;line-height:1.15}.brand small{display:block;opacity:.85;font-size:12px;min-height:14px}
+.top .hint{color:inherit;opacity:.9;margin-left:auto}
+.brand{cursor:pointer}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.tile{display:block;width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;cursor:pointer;text-align:left;font:inherit;color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.tile:hover{border-color:var(--ac)}.tile.on{border:2px solid var(--ac);background:var(--seat);padding:13px 15px}
+.tile h3{margin:0;padding-right:76px;font-size:17px}.tilew{position:relative}.tilew .tile{height:100%}
+.tdel{position:absolute;top:8px;right:8px;font:inherit;font-size:14px;padding:2px 6px;border:1px solid transparent;border-radius:6px;background:transparent;color:var(--mu);cursor:pointer}.tdel:hover{background:var(--bg);border-color:var(--bd)}.tdel.arm{background:#d32f2f;color:#fff;border-color:#d32f2f;font-size:12px}.tile hr{border:0;border-top:1px solid var(--bd);margin:10px 0}
+.tile .m{display:flex;gap:8px;font-size:14px;margin:4px 0}.tile .m span:first-child{color:var(--mu);min-width:92px;flex:none}
+.tile.new{border-style:dashed;display:flex;align-items:center;justify-content:center;color:var(--mu);min-height:120px;font-size:15px;box-shadow:none}
+.brand select{cursor:pointer;font:inherit;font-size:12px;background:rgba(255,255,255,.18);color:inherit;border:0;border-radius:4px;padding:1px 4px;max-width:220px}.brand select option{color:var(--tx);background:var(--sf)}
+.gear{position:relative}.top .gear>.rb{flex-direction:row;gap:6px;background:rgba(255,255,255,.18);color:inherit;font-size:13px}.top .gear>.rb:hover{background:rgba(255,255,255,.3)}
+.top .gear>.rb .ic{font-size:16px}
+.ribbon{display:flex;flex-wrap:wrap;padding:6px 10px 0}
+.grp{display:flex;flex-direction:column;padding:0 8px;border-right:1px solid var(--bd)}.grp:last-child{border-right:0}
+.gb{display:flex;gap:2px}.gl{font-size:11px;color:var(--mu);text-align:center;padding:2px 0 4px}
+.rb{font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:68px;padding:5px 8px;border:1px solid transparent;border-radius:6px;background:transparent;color:var(--tx);cursor:pointer}
+.rb .ic{font-size:22px;line-height:1.1;white-space:nowrap}.rb:hover{background:var(--seat)}.rb.on{background:var(--seat);border-color:var(--ac);font-weight:600}
+.menu{position:absolute;right:0;top:calc(100% + 6px);z-index:40;min-width:210px;padding:4px;background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.28);display:flex;flex-direction:column}.menu[hidden]{display:none}
+.menu .sep{width:100%;border:0;border-top:1px solid var(--bd);margin:4px 0}.top .gear>#gbtn{padding:4px 10px;min-width:0;width:auto;line-height:1}.top .gear>#gbtn .ic{font-size:20px}
+.menu .rb{flex-direction:row;gap:10px;justify-content:flex-start;width:100%;font-size:14px}.menu .rb .ic{font-size:18px}
+.sbar{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:8px 12px;background:var(--sf);border:1px solid var(--bd);border-radius:8px}.sbar[hidden]{display:none}
 h1{font-size:19px;margin:0 0 8px}h2{font-size:14px;margin:0 0 8px}
 .bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px}
-.tabs{display:flex;gap:4px}
-.tab{font:inherit;padding:8px 16px;border:1px solid var(--bd);border-bottom:0;border-radius:6px 6px 0 0;background:var(--bg);color:var(--mu);cursor:pointer}
-.tab.on{background:var(--bg);color:var(--tx);font-weight:600;border-color:var(--ac);border-bottom:3px solid var(--bg);margin-bottom:-1px}
 .b{font:inherit;padding:6px 10px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:6px;cursor:pointer}
 .b:hover:not(:disabled){border-color:var(--ac)}.b:disabled{opacity:.45;cursor:default}
 .b.p{background:var(--ac);color:var(--on);border-color:var(--ac)}
@@ -42,10 +65,21 @@ table{border-collapse:collapse;background:var(--sf)}
 .vb{font:inherit;font-weight:600;min-width:52px;padding:4px 9px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);color:var(--tx);cursor:pointer}
 .cA{background:rgba(47,160,100,.32)}.cB{background:rgba(140,190,50,.32)}.cC{background:rgba(230,190,30,.32)}.cD{background:rgba(240,140,30,.34)}.cE{background:rgba(220,60,60,.34)}
 .star{font-size:20px;line-height:1;padding:3px 10px;color:var(--mu)}.star.on{background:rgba(240,180,20,.35);color:#d99a00;border-color:#d99a00}
-#pop{position:fixed;z-index:50;display:flex;flex-direction:column;gap:4px;padding:5px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.28)}#pop[hidden]{display:none}
+#pop{position:fixed;z-index:50;display:flex;flex-direction:column;gap:4px;padding:5px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.28)}#pop[hidden]{display:none}#pop{max-height:80vh;overflow-y:auto}#pop.g3:not([hidden]){display:grid;grid-template-columns:repeat(3,auto)}.vb.gdd{padding:1px 5px;min-width:0;margin-left:2px}
 tr.abs td.dis{opacity:.4}tr.abs td:nth-child(2){color:var(--mu)}
 #ltb input[type=checkbox]{width:20px;height:20px;accent-color:var(--ac)}#ltb td:nth-child(n+3){text-align:center}
-#p3 label{margin-right:12px}
+#p3 label,#p6 label{margin-right:12px}#p6 .card{margin-bottom:12px;max-width:780px}
+#ktab th{cursor:pointer;user-select:none;background:var(--sf);vertical-align:bottom}#ktab th:hover{background:var(--seat)}#ktab th small{display:block;font-weight:400;color:var(--mu);white-space:nowrap}
+#ktab td:first-child{text-align:left;color:inherit;width:auto}#ktab td:nth-child(n+3){text-align:center}#ktab .gn{width:64px;text-align:center}
+.np{font-size:12px;color:var(--mu);margin-left:6px;display:inline-block;min-width:36px;text-align:left}.gn.bad{outline:2px solid #d32f2f}.warn{color:#c77700;font-weight:600;margin:6px 0}.warn:empty{display:none}.wn{margin-left:4px;cursor:help}.gn.dev{background:rgba(240,140,30,.4)}td.dev{background:rgba(240,140,30,.4)}
+.kp{width:68px;text-align:center}.kp.over{outline:2px solid #d32f2f}.kn{font-size:12px;color:var(--mu);min-height:15px}
+#sltab th{cursor:pointer;user-select:none;background:var(--sf);vertical-align:bottom}#sltab th:hover{background:var(--seat)}#sltab th small{display:block;font-weight:400;color:var(--mu);white-space:nowrap}
+#sltab td:first-child{text-align:left;color:inherit;width:auto}#sltab td:nth-child(n+3){text-align:center;white-space:nowrap}#sltab .gn{width:52px;text-align:center}
+#otab th{cursor:pointer;user-select:none;background:var(--sf);text-align:center;vertical-align:bottom}#otab th:hover{background:var(--seat)}#otab thead tr:first-child th{cursor:default}
+#lntab td,#lntab th,#lndet td,#lndet th{border:1px solid var(--bd);padding:5px 9px;text-align:center;white-space:nowrap}#lndet td{text-align:left;white-space:normal}#lntab .gs{border-left:2px solid var(--ac)}#lntab .jo{font-weight:700}#lnsel{font:inherit}.nst td{border:1px solid var(--bd);padding:3px 8px;text-align:center;font-size:12px}#nsmode .b.on{background:var(--seat);border-color:var(--ac);font-weight:600}#nssel{font:inherit}#lntab .pc{font-weight:400;font-size:10px;color:var(--mu)}#lnmode .b.on{background:var(--seat);border-color:var(--ac);font-weight:600}
+#otab td:first-child{text-align:left;color:inherit;width:auto}#otab td:nth-child(n+3){text-align:center;white-space:nowrap}#otab .gs{border-left:2px solid var(--ac)}#otab .jo{font-weight:700}#otab .gn{width:46px;text-align:center;padding:2px 3px}#otab .np{margin-left:3px;min-width:0}#otab td.dev{background:rgba(240,140,30,.4)}
+#vktab td:first-child{text-align:left;color:inherit;width:auto}#vktab td:nth-child(n+2){text-align:center}#vktab input[type=checkbox]{width:18px;height:18px;accent-color:var(--ac)}#vktab input[type=number]{width:70px}
+#atab td:first-child{text-align:left;color:inherit;width:auto;font-weight:600}#atab td:nth-child(n+2){text-align:center}#atab input{width:72px}
 #mroom{position:relative;background:var(--room);border:2px solid var(--bd);border-radius:8px;overflow:hidden}
 .mseat,.seat.mseat{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:3px;padding:4px 6px;font-weight:400;text-align:left}
 .seat.mseat.free{align-items:center;justify-content:center}
@@ -69,17 +103,68 @@ th,td{border:1px solid var(--bd);padding:3px 6px;text-align:left}
 td:first-child{text-align:right;color:var(--mu);width:36px}
 #p2 .card{margin-bottom:12px;max-width:640px}
 dialog{max-width:420px;background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:8px}
+
+/* === Design-Überarbeitung: Grautöne, Tabellen im Streifen-Stil === */
+:root{--bg:#eceef1;--sf:#fff;--tx:#23262d;--mu:#6b7280;--bd:#d9dce2;--ac:#4b5468;--on:#fff;--seat:#e1e5ec;--room:#f7f8fa;--bo:#3d4150;--hd:#41454f;--hd2:#555a67;--zb:#f3f4f6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1d21;--sf:#26282d;--tx:#e6e7ea;--mu:#9a9da5;--bd:#3a3d45;--ac:#9fb0cf;--on:#15181f;--seat:#343a48;--room:#202226;--bo:#3a3f4d;--hd:#2f323b;--hd2:#40444f;--zb:#2b2d33}}
+:root[data-theme="dark"]{--bg:#1c1d21;--sf:#26282d;--tx:#e6e7ea;--mu:#9a9da5;--bd:#3a3d45;--ac:#9fb0cf;--on:#15181f;--seat:#343a48;--room:#202226;--bo:#3a3f4d;--hd:#2f323b;--hd2:#40444f;--zb:#2b2d33}
+body::before{background:var(--hd)}
+.top{background:var(--hd);color:#fff}
+.brand b{font-family:"Pacifico","Dancing Script","Brush Script MT",Arial,sans-serif;font-weight:400;font-size:22px;letter-spacing:.3px;line-height:1.25}
+header.app{border-bottom:1px solid var(--bd)}
+.top .gear>.rb,.brand select{color:#fff}
+.b.p{color:var(--on)}
+table{border-radius:8px;overflow:hidden}
+th,td{border:0;border-bottom:1px solid transparent}
+table th{background:var(--hd)!important;color:#fff!important;font-weight:600;border:0;border-left:1px solid rgba(255,255,255,.10);padding:7px 9px}
+table th:first-child{border-left:0}
+table th:hover{background:var(--hd2)!important}
+table th small{color:rgba(255,255,255,.72)!important}
+table tbody tr:nth-child(odd){background:var(--sf)}
+table tbody tr:nth-child(even){background:var(--zb)}
+table td{padding:5px 9px}
+#otab .gs,#lntab .gs{border-left:1px solid var(--bd)}
+#otab th.gs,#lntab th.gs{border-left:1px solid rgba(255,255,255,.10)}
+#lntab td,#lndet td,.nst td{border:0}
+.nst td{border:1px solid var(--bd)}
+#lntab th,#lndet th{border:0;border-left:1px solid rgba(255,255,255,.10)}
+.card{box-shadow:0 1px 3px rgba(0,0,0,.06)}
+table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6ea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) table tbody tr:hover{background:#383b44}}
+:root[data-theme="dark"] table tbody tr:hover{background:#383b44}
 </style></head><body>
-<header>
-<h1>Sitzplan-Editor</h1>
-<div class="bar">
-<button class="b p" id="save">Speichern (JSON)</button>
-<button class="b" id="load">Laden (JSON)</button>
+<header class="app">
+<div class="top"><div class="brand"><span class="logo">🎓</span><div><b>StudyGroup</b><select id="gsel" aria-label="Lerngruppe"></select></div></div>
 <span id="msg" class="hint"></span>
-</div>
-<div class="tabs"><button class="tab on" data-t="1">Sitzordnung</button><button class="tab" data-t="2">Lerngruppe &amp; Schüler</button><button class="tab" data-t="3">Mitarbeit</button><button class="tab" data-t="4">Noten</button><button class="tab" data-t="5">Sozialverhalten</button></div>
+<div class="gear"><button class="rb" id="gbtn" aria-haspopup="true" aria-label="Menü" title="Menü"><span class="ic">☰</span></button>
+<div class="menu" id="gmenu" hidden>
+<button class="rb" data-s="12"><span class="ic">⚙️</span>Allgemeine Einstellungen</button>
+<button class="rb" data-s="2"><span class="ic">👥</span>Lerngruppe &amp; Schüler</button>
+<button class="rb" data-s="1"><span class="ic">🪑</span>Sitzordnung</button>
+<button class="rb" data-s="3"><span class="ic">✍️</span>Mitarbeit (Stunden)</button>
+<button class="rb" data-s="6"><span class="ic">🧮</span>Schriftliche Leistungen</button>
+<button class="rb" data-s="9"><span class="ic">🧩</span>Sonstige Leistungen</button></div></div></div>
+<nav class="ribbon">
+<div class="grp"><div class="gb">
+<button class="rb" id="save" title="Speichern (JSON)"><span class="ic">💾</span>Speichern</button>
+<button class="rb" id="load" title="Laden (JSON)"><span class="ic">📂</span>Laden</button></div><div class="gl">Datei (JSON)</div></div>
+<div class="grp"><div class="gb">
+<button class="rb tab on" data-t="0" title="Home"><span class="ic">🏠</span>Home</button>
+<button class="rb tab" data-t="8" title="Übersicht"><span class="ic">📊</span>Übersicht</button>
+<button class="rb tab" data-t="11" title="Lernende (Einzelübersicht)"><span class="ic">🧒</span>Lernende</button>
+<button class="rb tab" data-t="4" title="Mündliche Mitarbeit"><span class="ic">🙋</span>Mündlich</button>
+<button class="rb tab" data-t="5" title="Sozialverhalten"><span class="ic">🙂</span>Sozial</button>
+<button class="rb tab" data-t="7" title="Schriftliche Leistungen"><span class="ic">📝</span>Schriftlich</button>
+<button class="rb tab" data-t="10" title="Sonstige Leistungen"><span class="ic">🧩</span>Sonstige</button></div><div class="gl">Ansicht</div></div>
+<div class="grp"><div class="gb">
+<button class="rb" id="qlesson" title="Neue Stunde anlegen (Mitarbeit)"><span class="ic">➕✍️</span>Stunde</button>
+<button class="rb" id="qwritten" title="Neue schriftliche Leistung anlegen"><span class="ic">➕📝</span>Schriftlich</button>
+<button class="rb" id="qother" title="Neue sonstige Leistung anlegen"><span class="ic">➕🧩</span>Sonstige</button></div><div class="gl">Neu anlegen</div></div>
+</nav>
 </header>
 <main>
+<div id="sbar" class="sbar" hidden><button class="b" id="sback">← Zurück</button><span>⚙️ Einstellungen › <b id="stitle"></b></span></div>
+<section id="p0" hidden><div id="tiles" class="tiles"></div></section>
 <section id="p1">
 <div id="gname"></div>
 <div class="lay"><div class="wrap"><div id="room"></div></div>
@@ -101,7 +186,8 @@ dialog{max-width:420px;background:var(--sf);color:var(--tx);border:1px solid var
 </section>
 <section id="p2" hidden>
 <div class="card"><h2>Lerngruppe</h2>
-<label>Bezeichnung <input id="gin" placeholder="z. B. 10b Informatik" size="28"></label></div>
+<label>Bezeichnung <input id="gin" placeholder="z. B. 10b Informatik" size="28"></label>
+<p class="hint">Alle Angaben (Sitzordnung, Schüler, Stunden, Noten, Sozialverhalten) gehören zur ausgewählten Lerngruppe. Lerngruppen legst du auf der Startseite (Home) an, wählst sie dort aus und löscht sie dort.</p></div>
 <div class="card"><h2>Schüler (<span id="cnt">0</span>)</h2>
 <table><thead><tr><th>ID</th><th>Vorname</th><th>Nachname</th><th></th></tr></thead><tbody id="stb"></tbody></table>
 <p><button class="b" id="addst">+ Schüler hinzufügen</button></p></div>
@@ -126,7 +212,7 @@ dialog{max-width:420px;background:var(--sf);color:var(--tx);border:1px solid var
 <p class="hint" id="uhint"></p>
 <p><button class="b" id="uedit" aria-pressed="false">Mitarbeit bearbeiten: aus</button></p>
 <div class="wrap"><table id="utab"><thead><tr id="uth"></tr></thead><tbody id="utb"></tbody></table></div>
-<p class="hint">Note aus der Mitarbeit: +++ = 1, ++ = 2, + = 3, +/- = 4, - = 5, -- = 6. Grün markiert: besonders gute Leistung (bitte bei der Gesamtnote manuell berücksichtigen). n.a. = nicht anwesend (zählt nicht für Ø). Roter Rahmen: Benehmen 👿. Spaltenüberschrift anklicken zum Sortieren.</p>
+<p class="hint">Note aus der Mitarbeit: +++ = 1, ++ = 2, + = 3, +/- = 4, - = 5, -- = 6. Grün markiert: besonders gute Leistung (Stern); die Stunde zählt im Ø einen Notenpunkt (⅓ Note) besser. n.a. = nicht anwesend (zählt nicht für Ø). Roter Rahmen: Benehmen 👿. Die Gesamtnote (mündlich) trägst du als Note mit Tendenz ein (1+ bis 6, Auswahlliste); daneben stehen die Notenpunkte (1+ = 15 bis 6 = 0). ⚠️: Die Gesamtnote weicht um mehr als einen Notenpunkt vom Ø ab (Mitarbeit: +++ = 14, ++ = 11, + = 8, +/- = 5, - = 2, -- = 0). Spaltenüberschrift anklicken zum Sortieren.</p>
 </section>
 <section id="p5" hidden>
 <p><button class="b" id="sedit" aria-pressed="false">Sozialverhalten bearbeiten: aus</button></p>
@@ -134,9 +220,72 @@ dialog{max-width:420px;background:var(--sf);color:var(--tx);border:1px solid var
 <div class="wrap"><table id="stab"><thead><tr id="shead"></tr></thead><tbody id="sbody"></tbody></table></div>
 <p class="hint">Gesamt: frei wählbares Icon pro Schüler (wird gespeichert). Die Stundenzellen zeigen das Benehmen der Stunde. Rosa: Super Benehmen ♥, roter Rahmen: 👿, n.a. = nicht anwesend. Spaltenüberschrift anklicken zum Sortieren.</p>
 </section>
+<section id="p6" hidden>
+<div class="card"><div class="row">
+<label>Schriftliche Leistung <select id="asel"></select></label>
+<button class="b" id="anew">+ Neu</button><button class="b" id="adel">Löschen</button></div>
+<p class="hint" id="ahint"></p></div>
+<div id="abody">
+<div class="card"><h2>Angaben</h2><div class="row">
+<label>Typ <select id="aart"><option value="Klassenarbeit">Klassenarbeit</option><option value="SKK">SKK</option><option value="Test">Test</option><option value="HA-Kontrolle">HA-Kontrolle</option></select></label>
+<label>Thema <input id="at" size="34"></label>
+<label>Datum <input type="date" id="ad"></label>
+<label>Punkte (maximal) <input type="number" id="ap" min="1" step="0.5" style="width:90px"></label></div></div>
+<div class="card"><h2>Notenverteilung</h2>
+<p class="hint">Ab welchem Prozentsatz der Punkte es welche Note gibt. Intern werden Notenpunkte von 15 (1+) bis 0 (6) verwendet.</p>
+<table id="atab"><thead><tr><th>Note</th><th>Notenpunkte</th><th>ab Prozent</th><th>ab Punkte</th></tr></thead><tbody id="abd"></tbody></table>
+<p><button class="b" id="astd">Standardverteilung</button> <span id="awarn" class="hint"></span></p></div>
+</div></section>
+<section id="p7" hidden>
+<p><label>Typ <select id="ktyp"></select></label></p>
+<p class="hint" id="khint"></p>
+<p class="warn" id="kwarn"></p>
+<div class="wrap"><table id="ktab"><thead><tr id="khead"></tr></thead><tbody id="kbody"></tbody></table></div>
+<div class="card" id="nscard"><h2>Notenspiegel</h2>
+<p><label>Leistung <select id="nssel"></select></label> <span id="nsmode"><button class="b" data-m="p">Notenpunkte</button> <button class="b" data-m="n">Noten (ohne Tendenz)</button></span></p>
+<div id="nsout"></div></div>
+<p class="hint">Angezeigt werden die schriftlichen Leistungen des gewählten Typs (oben wählbar, Standard: Klassenarbeit). In den Spalten trägst du die erreichten Punkte ein. Die Note ergibt sich aus der Notenverteilung (in Klammern: Notenpunkte). Ø = Durchschnitt der Notenpunkte aller eingetragenen Arbeiten (gleich gewichtet), gerundet auf die nächste Note mit Tendenz. Die Gesamtnote trägst du selbst ein. Jeder Typ hat seine eigene Gesamtnote pro Schüler („Alle Typen“ ebenfalls). Unter den Punkten steht der erreichte Anteil in Prozent. ⚠️ erscheint, wenn die Gesamtnote nicht der mathematisch gerundeten Durchschnittsnote entspricht.</p>
+</section>
+<datalist id="notenlist"></datalist>
+<section id="p8" hidden>
+<p class="hint">Verteilungsschlüssel und Sichtbarkeit der Spalten: Menü ☰ › Allgemeine Einstellungen.</p>
+<div class="wrap"><table id="otab"><thead><tr id="ohead1"></tr><tr id="ohead2"></tr></thead><tbody id="obody"></tbody></table></div>
+<p class="hint">Note: die manuell eingetragene Gesamtnote (Seiten „Mündliche Mitarbeit“ und „Schriftliche Leistungen“, für das Schuljahr hier). Ø: Durchschnitt der Notenpunkte, in Klammern die Notenpunkte (Mitarbeit: +++ = 14, ++ = 11, + = 8, +/- = 5, - = 2, -- = 0, Stern = +1; schriftlich: nach Notenverteilung). Schuljahr-Ø: gewichtet nach Verteilungsschlüssel; je Kategorie zählt die manuelle Gesamtnote, falls vorhanden, sonst der Ø; Kategorien ohne Wert werden übersprungen. Sonstige Leistungen: Ø über alle sonstigen Leistungen, Note = Gesamtnote „Alle Typen“. Bei den sonstigen Leistungen zählt die Gesamtnote „Alle Typen“; ihr Gewicht ist anfangs 0 % und lässt sich im Verteilungsschlüssel einstellen. Weicht eine Note (Schuljahr oder Kategorie) um mehr als einen Notenpunkt vom Ø ab, wird ein ⚠️ angezeigt.</p>
+</section>
+<section id="p12" hidden>
+<div class="card" id="vkcard"><h2>Verteilungsschlüssel Gesamtnote &amp; Sichtbarkeit in der Übersicht</h2><table id="vktab"><thead><tr><th>Bereich</th><th>Gewicht</th><th>Ø anzeigen</th></tr></thead><tbody id="vkbody"></tbody></table>
+<p class="hint" id="vksum"></p><p class="hint">Bereiche mit 0 % werden in der Tabelle ausgeblendet. Ohne Haken bei „Ø anzeigen“ entfällt nur die Ø-Spalte des Bereichs.</p><p><button class="b" id="vkstd">Standardverteilung</button></p></div>
+</section>
+<section id="p9" hidden>
+<div class="card"><div class="row">
+<label>Sonstige Leistung <select id="bsel"></select></label>
+<button class="b" id="bnew">+ Neu</button><button class="b" id="bdel">Löschen</button></div>
+<p class="hint" id="bhint"></p></div>
+<div id="bbody"><div class="card"><h2>Angaben</h2><div class="row">
+<label>Typ <select id="btyp"><option value="mündlich">mündlich</option><option value="schriftlich">schriftlich</option></select></label>
+<label>Thema <input id="bt" size="34"></label>
+<label>Datum <input type="date" id="bd"></label></div>
+<p class="hint">Sonstige Leistungen haben keine Punkte, bewertet wird später pro Schüler mit einer Note (mit Tendenz).</p></div></div>
+</section>
+<section id="p11" hidden>
+<p><label>Lernende/r <select id="lnsel"></select></label></p>
+<p class="hint" id="lnhint"></p>
+<div class="wrap"><table id="lntab" class="ro"><thead><tr id="lnh1"></tr><tr id="lnh2"></tr></thead><tbody id="lnb"></tbody></table></div>
+<p id="lnmode" class="lnmode"><button class="b" data-m="d">Einzelleistungen</button> <button class="b" data-m="m">Mitarbeit (Verlauf)</button> <button class="b" data-m="s">Schriftlich &amp; Sonstige (Säulen)</button></p>
+<div id="lngraph" class="card" hidden></div>
+<div class="wrap" id="lndwrap"><table id="lndet" class="ro"><thead><tr><th>Bereich</th><th>Datum</th><th>Thema</th><th>Ergebnis</th></tr></thead><tbody id="lndb"></tbody></table></div>
+<p class="hint">Nur Ansicht – Leistungen werden auf den jeweiligen Seiten bearbeitet.</p>
+</section>
+<section id="p10" hidden>
+<p><label>Typ <select id="sltyp"></select></label></p>
+<p class="hint" id="slhint"></p>
+<p class="warn" id="slwarn"></p>
+<div class="wrap"><table id="sltab"><thead><tr id="slhead"></tr></thead><tbody id="slbody"></tbody></table></div>
+<p class="hint">Hier trägst du pro sonstiger Leistung die Note (mit Tendenz) der Schüler ein. Ø = Durchschnitt der Notenpunkte der angezeigten Leistungen, gerundet auf die nächste Note. Die Gesamtnote trägst du selbst ein, je Typ („Alle Typen“ ebenfalls). ⚠️ erscheint, wenn sie nicht der mathematisch gerundeten Durchschnittsnote entspricht.</p>
+</section>
 <div id="pop" hidden></div>
 </main>
-<dialog id="ldlg"><h2>Sitzplan laden</h2>
+<dialog id="ldlg"><h2>Daten laden</h2>
 <p><input type="file" id="file" accept=".json,application/json,text/plain"></p>
 <p class="hint">Oder den JSON-Text hier einfügen:</p>
 <textarea id="lin" rows="8" cols="40"></textarea>
@@ -157,17 +306,21 @@ function std(){S.tables=[];selT=null;selS=null;S.board.x=250;S.board.y=544;S.des
 const order=()=>S.tables.slice().sort((a,b)=>a.y-b.y||a.x-b.x).flatMap(t=>t.seats.map((_,i)=>[t,i]));
 const seatOf=id=>{for(const t of S.tables){const i=t.seats.indexOf(id);if(i>-1)return[t,i]}return null};
 const unassigned=()=>grp.st.filter(s=>!seatOf(s.id));
-const ser=()=>({version:2,lerngruppe:{bezeichnung:grp.name,schueler:grp.st},tische:S.tables.map(t=>({x:t.x,y:t.y,plaetze:t.n,quer:!!t.rot,schueler:t.seats})),tafel:{x:S.board.x,y:S.board.y},pult:{x:S.desk.x,y:S.desk.y},stunden:serL()});
-const keep=()=>{try{localStorage.setItem('sitzplan2',JSON.stringify(ser()))}catch(e){}};
+const ser=()=>({version:2,lerngruppe:{bezeichnung:grp.name,schueler:grp.st},tische:S.tables.map(t=>({x:t.x,y:t.y,plaetze:t.n,quer:!!t.rot,schueler:t.seats})),tafel:{x:S.board.x,y:S.board.y},pult:{x:S.desk.x,y:S.desk.y},stunden:serL(),schriftlicheLeistungen:serA(),verteilungsschluessel:VK,sonstigeLeistungen:serSL()});
+let GROUPS=[],curG=0,gnext=1;
+const stash=()=>{const g=GROUPS.find(x=>x.id===curG);if(g)g.d=ser()};
+const fullSer=()=>{stash();return {version:3,aktiv:curG,lerngruppen:GROUPS.map(g=>Object.assign({id:g.id},g.d))}};
+function fillG(){const sel=$('gsel');if(!sel)return;stash();sel.textContent='';GROUPS.forEach(g=>sel.add(new Option(g.d.lerngruppe.bezeichnung||'(ohne Bezeichnung)',g.id)));sel.value=curG}
+const keep=()=>{fillG();try{localStorage.setItem('sitzplan3',JSON.stringify(fullSer()))}catch(e){}};
 function apply(o){
   if(!o||!Array.isArray(o.tische)||!o.lerngruppe||!Array.isArray(o.lerngruppe.schueler))throw 0;
   grp.name=String(o.lerngruppe.bezeichnung||'');
-  grp.st=o.lerngruppe.schueler.map(s=>({id:+s.id,vorname:String(s.vorname||''),nachname:String(s.nachname||''),gesamtnote:String(s.gesamtnote||''),sozialverhalten:SOZ.includes(s.sozialverhalten)?s.sozialverhalten:''})).filter(s=>s.id>0);
+  grp.st=o.lerngruppe.schueler.map(s=>({id:+s.id,vorname:String(s.vorname||''),nachname:String(s.nachname||''),gesamtnote:String(s.gesamtnote||''),gesamtnotenKA:mapGN(s),gesamtnotenSL:mapGSL(s),gesamtnoteJahr:String(s.gesamtnoteJahr||''),sozialverhalten:SOZ.includes(s.sozialverhalten)?s.sozialverhalten:''})).filter(s=>s.id>0);
   const ids=new Set(grp.st.map(s=>s.id));
   S.tables=[];nid=1;
   o.tische.forEach(q=>{const n=q.plaetze==1?1:2;add(+q.x||0,+q.y||0,n,q.quer,Array.from({length:n},(_,i)=>{const v=q.schueler&&q.schueler[i];return ids.has(v)?v:null}))});
   [['board',o.tafel],['desk',o.pult]].forEach(([k,v])=>{if(v){S[k].x=+v.x||0;S[k].y=+v.y||0;clampO(S[k])}});
-  loadL(o.stunden);selT=null;selS=null;$('gin').value=grp.name;
+  loadL(o.stunden);loadA(o.schriftlicheLeistungen||o.klassenarbeiten);loadVK(o.verteilungsschluessel);loadSL(o.sonstigeLeistungen);selT=null;selS=null;$('gin').value=grp.name;
 }
 function render(){
   room.querySelectorAll('.tbl,.fix').forEach(e=>e.remove());
@@ -261,11 +414,475 @@ $('impb').onclick=()=>{
   $('imp').value='';renderSt();keep();
 };
 $('gin').oninput=e=>{grp.name=e.target.value;keep()};
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
-  closePop();$('p1').hidden=b.dataset.t!=='1';$('p2').hidden=b.dataset.t!=='2';$('p3').hidden=b.dataset.t!=='3';$('p4').hidden=b.dataset.t!=='4';$('p5').hidden=b.dataset.t!=='5';
-  if(b.dataset.t==='1')render();else if(b.dataset.t==='2')renderSt();else if(b.dataset.t==='3')renderL();else if(b.dataset.t==='4')renderU();else renderS();
-});
+let lastMain=0,curN=0;
+function show(n){
+  closePop();$('gmenu').hidden=true;
+  curN=n;fillG();
+  for(let i=0;i<=12;i++)$('p'+i).hidden=i!==n;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',+x.dataset.t===n));
+  $('sbar').hidden=![1,2,3,6,9,12].includes(n);$('stitle').textContent={1:'Sitzordnung',2:'Lerngruppe & Schüler',3:'Mitarbeit (Stunden)',6:'Schriftliche Leistungen',9:'Sonstige Leistungen',12:'Allgemeine Einstellungen'}[n]||'';
+  if(![1,2,3,6,9,12].includes(n))lastMain=n;
+  [renderHome,render,renderSt,renderL,renderU,renderS,renderA,renderK,renderO,renderSLset,renderSLtab,renderLN,renderVK][n]();
+}
+document.querySelectorAll('.tab,[data-s]').forEach(b=>b.onclick=()=>show(+(b.dataset.t||b.dataset.s)));
+function freshG(){grp={name:'',st:[]};LS=[];curL=null;lid=1;AR=[];curA=null;aid=1;VK=defVK();SOL=[];curSL=null;slid=1;nid=1;std();const id=gnext++;GROUPS.push({id,d:ser()});curG=id;$('gin').value=''}
+function loadAll(o){
+  if(o&&Array.isArray(o.lerngruppen)){
+    const ok=q=>q&&Array.isArray(q.tische)&&q.lerngruppe&&Array.isArray(q.lerngruppe.schueler);
+    if(!o.lerngruppen.length||!o.lerngruppen.every(ok))throw 0;
+    const gs=o.lerngruppen.map((q,i)=>({id:i+1,oid:q.id,d:q})),act=gs.find(g=>g.oid===o.aktiv)||gs[0];
+    apply(act.d);GROUPS=gs;curG=act.id;gnext=gs.length+1;
+  }else{apply(o);GROUPS=[{id:1,d:o}];curG=1;gnext=2}
+}
+function switchG(id){stash();const g=GROUPS.find(x=>x.id===id);if(!g)return;curG=id;apply(g.d);keep();show(curN)}
+$('gsel').onchange=e=>switchG(+e.target.value);
+function addGroup(){stash();freshG();keep();show(2);$('gin').focus()}
+function delGroup(id){
+  const i=GROUPS.findIndex(g=>g.id===id);if(i<0)return;
+  stash();GROUPS.splice(i,1);
+  if(!GROUPS.length)freshG();
+  else if(id===curG){const g=GROUPS[Math.max(0,i-1)];curG=g.id;apply(g.d)}
+  keep();show(curN);
+}
+function renderHome(){
+  stash();const box=$('tiles');box.textContent='';
+  GROUPS.forEach(g=>{
+    const d=g.d,ls=d.stunden||[];let last=null;
+    ls.forEach(l=>{if(!last||(l.datum||'')>=(last.datum||''))last=l});
+    const b=document.createElement('button');b.className='tile'+(g.id===curG?' on':'');
+    const h=document.createElement('h3');h.textContent=d.lerngruppe.bezeichnung||'(ohne Bezeichnung)';
+    const row=(k,v)=>{const r=document.createElement('div');r.className='m';const a=document.createElement('span');a.textContent=k;const c=document.createElement('span');c.textContent=v;r.append(a,c);return r};
+    b.append(h,document.createElement('hr'),row('Sch\u00fcler',String(d.lerngruppe.schueler.length)),row('Letzte Stunde',last?fmtD(last.datum)+(last.thema?' \u2013 '+last.thema:''):'\u2013'));
+    b.onclick=()=>{if(g.id!==curG)switchG(g.id)};
+    const w=document.createElement('div');w.className='tilew';
+    const x=document.createElement('button');x.className='tdel';x.textContent='Löschen';x.title='Lerngruppe l\u00f6schen';x.setAttribute('aria-label','Lerngruppe l\u00f6schen');
+    x.onclick=()=>{
+      if(!x.dataset.arm){x.dataset.arm=1;x.textContent='Sicher?';x.classList.add('arm');setTimeout(()=>{if(x.isConnected){delete x.dataset.arm;x.textContent='Löschen';x.classList.remove('arm')}},3000);return}
+      delGroup(g.id);
+    };
+    w.append(b,x);box.appendChild(w);
+  });
+  const n=document.createElement('button');n.className='tile new';n.textContent='+ Neue Lerngruppe';n.onclick=addGroup;box.appendChild(n);
+}
+document.querySelector('.brand').onclick=e=>{if(!e.target.closest('select'))show(0)};
+const TYPEN=['Klassenarbeit','SKK','Test','HA-Kontrolle'],TKURZ={'Klassenarbeit':'KA','SKK':'SKK','Test':'Test','HA-Kontrolle':'HA-K'};
+const NOTEN=['1+','1','1-','2+','2','2-','3+','3','3-','4+','4','4-','5+','5','5-','6'];
+const DEFV=[95,90,85,80,75,70,65,60,55,50,45,40,33,27,20,0];
+let AR=[],curA=null,aid=1,aPts=[];
+const getA=()=>AR.find(a=>a.id===curA);
+const sortedA=()=>AR.slice().sort((a,b)=>(b.datum||'').localeCompare(a.datum||'')||b.id-a.id);
+const fmtN=n=>(Math.round(n*10)/10).toString().replace('.',',');
+function mapGN(s){
+  const src=s.gesamtnotenKA&&typeof s.gesamtnotenKA==='object'?s.gesamtnotenKA:(s.gesamtnoteKA?{Klassenarbeit:s.gesamtnoteKA}:{}),o={};
+  TYPEN.concat('Alle').forEach(t=>{if(src[t])o[t]=String(src[t])});return o;
+}
+function serA(){const ids=new Set(grp.st.map(s=>s.id));return AR.map(a=>({typ:a.art,thema:a.thema,datum:a.datum,punkte:a.punkte,verteilung:a.v,ergebnisse:Object.entries(a.e||{}).filter(([id])=>ids.has(+id)).map(([id,p])=>({schueler:+id,punkte:p}))}))}
+function loadA(arr){
+  AR=[];aid=1;
+  (Array.isArray(arr)?arr:[]).forEach(q=>{
+    const v=Array.isArray(q.verteilung)&&q.verteilung.length===16?q.verteilung.map(n=>Math.min(100,Math.max(0,+n||0))):DEFV.slice();v[15]=0;
+    AR.push({id:aid++,art:TYPEN.includes(q.typ||q.art)?(q.typ||q.art):'Klassenarbeit',thema:String(q.thema||''),datum:String(q.datum||''),punkte:+q.punkte>0?+q.punkte:40,v,e:Object.fromEntries((Array.isArray(q.ergebnisse)?q.ergebnisse:[]).map(r=>[+r.schueler,parseFloat(r.punkte)]).filter(([id,p])=>id>0&&p>=0))});
+  });
+  curA=AR.length?sortedA()[0].id:null;
+}
+function fillA(){
+  const sel=$('asel');sel.textContent='';
+  sortedA().forEach(a=>sel.add(new Option((a.datum?fmtD(a.datum)+' \u2013 ':'')+TKURZ[a.art]+': '+(a.thema||'(ohne Thema)'),a.id)));
+  sel.value=curA==null?'':curA;
+}
+function updPts(a){
+  aPts.forEach((c,i)=>{c.textContent=i===15?'0':fmtN(a.punkte*a.v[i]/100)});
+  let bad=false;for(let i=0;i<14;i++)if(a.v[i]<a.v[i+1])bad=true;
+  $('awarn').textContent=bad?'Achtung: Die Prozentwerte sollten von 1+ bis 5- absteigen.':'';
+}
+function renderA(){
+  fillA();const a=getA();
+  $('asel').disabled=!a;$('adel').disabled=!a;$('abody').style.display=a?'':'none';
+  $('ahint').textContent=a?'':'Noch keine schriftliche Leistung angelegt: mit \u201e+ Neu\u201c beginnen.';
+  if(!a)return;
+  $('aart').value=a.art;$('at').value=a.thema;$('ad').value=a.datum;$('ap').value=a.punkte;
+  const tb=$('abd');tb.textContent='';aPts=[];
+  NOTEN.forEach((n,i)=>{
+    const tr=tb.insertRow();tr.insertCell().textContent=n;tr.insertCell().textContent=15-i;
+    const c=tr.insertCell();
+    if(i===15)c.textContent='0 %';
+    else{
+      const inp=document.createElement('input');inp.type='number';inp.min=0;inp.max=100;inp.step=1;inp.value=a.v[i];inp.setAttribute('aria-label','ab Prozent f\u00fcr Note '+n);
+      inp.oninput=()=>{a.v[i]=Math.min(100,Math.max(0,+inp.value||0));updPts(a);keep()};
+      c.append(inp,' %');
+    }
+    aPts[i]=tr.insertCell();
+  });
+  updPts(a);
+}
+$('asel').onchange=e=>{curA=+e.target.value;renderA()};
+$('anew').onclick=()=>{
+  const last=AR[AR.length-1];
+  const a={id:aid++,art:'Klassenarbeit',thema:'',datum:new Date().toLocaleDateString('sv-SE'),punkte:last?last.punkte:40,v:last?last.v.slice():DEFV.slice(),e:{}};
+  AR.push(a);curA=a.id;keep();renderA();$('at').focus();
+};
+$('adel').onclick=()=>{
+  const b=$('adel');
+  if(!b.dataset.arm){b.dataset.arm=1;b.textContent='Sicher?';setTimeout(()=>{delete b.dataset.arm;b.textContent='L\u00f6schen'},3000);return}
+  delete b.dataset.arm;b.textContent='L\u00f6schen';
+  AR=AR.filter(x=>x.id!==curA);curA=AR.length?sortedA()[0].id:null;keep();renderA();
+};
+$('aart').onchange=e=>{getA().art=e.target.value;fillA();keep()};
+$('at').oninput=e=>{getA().thema=e.target.value;fillA();keep()};
+$('ad').oninput=e=>{getA().datum=e.target.value;fillA();keep()};
+$('ap').oninput=e=>{const a=getA(),v=parseFloat(e.target.value);if(v>0){a.punkte=v;updPts(a);keep()}};
+$('astd').onclick=()=>{getA().v=DEFV.slice();renderA();keep()};
+const normN=t=>String(t||'').trim().replace(/[\u2013\u2212]/g,'-').replace(/\s+/g,'');
+const npText=t=>{const i=NOTEN.indexOf(normN(t));return i<0?'':(15-i)+' P.'};
+function gradeInput(get,set,ariaLabel,avgFn){
+  const inp=document.createElement('input'),np=document.createElement('span'),ws=document.createElement('span');
+  ws.className='wn';inp.className='gn';inp.value=get()||'';inp.setAttribute('aria-label',ariaLabel);np.className='np';
+  const upd=()=>{const t=normN(inp.value);np.textContent=npText(t);inp.classList.toggle('bad',t!==''&&!NOTEN.includes(t));const a=avgFn?avgFn():null,g=gp(t),d=(a!==null&&a!==undefined&&g!==null)?Math.abs(g-a):0,off=d>1+1e-9;ws.textContent=off?'⚠️':'';ws.title=off?'Weicht um '+fmtN(d)+' Notenpunkte vom \u00d8 ab':''};
+  inp.oninput=()=>{set(inp.value);upd();keep()};
+  inp.onchange=()=>{const t=normN(inp.value);if(NOTEN.includes(t)){inp.value=t;set(t);upd();keep()}};
+  const bt=document.createElement('button');bt.type='button';bt.className='vb sm gdd';bt.textContent='▾';bt.title='Note auswählen';bt.setAttribute('aria-label','Note auswählen');
+  bt.onclick=()=>openPop(bt,NOTEN.concat(''),()=>'',normN(inp.value),v=>{inp.value=v;set(v);upd();keep()},n=>n===''?'– leer':n,3);
+  inp.refresh=upd;upd();return [inp,bt,np,ws];
+}
+const npOf=(a,pts)=>{const pc=pts/a.punkte*100;for(let i=0;i<16;i++)if(pc+1e-9>=a.v[i])return 15-i;return 0};
+const noteOf=np=>NOTEN[15-Math.max(0,Math.min(15,Math.round(np)))];
+let kSort={k:'n',d:1},kTyp='Klassenarbeit';
+$('ktyp').onchange=e=>{kTyp=e.target.value;renderK()};
+function renderK(){
+  const dl=$('notenlist');if(!dl.children.length)NOTEN.forEach(n=>dl.appendChild(new Option('',n)));
+  const ft=$('ktyp');if(!ft.children.length){TYPEN.forEach(t=>ft.add(new Option(t,t)));ft.add(new Option('Alle Typen','Alle'))}ft.value=kTyp;
+  const bads=new Set();$('kwarn').textContent='';
+  const tb=$('kbody'),th=$('khead');tb.textContent='';th.textContent='';
+  const as=AR.filter(a=>kTyp==='Alle'||a.art===kTyp).sort((a,b)=>(a.datum||'').localeCompare(b.datum||'')||a.id-b.id);
+  $('khint').textContent=!grp.st.length?'Noch keine Sch\u00fcler: bitte unter \u201e\u2699\uFE0F Einstellungen\u201c anlegen.':(!AR.length?'Noch keine schriftliche Leistung: bitte unter \u201e\u2699\uFE0F Einstellungen \u203a Schriftliche Leistungen\u201c anlegen.':(!as.length?'Keine schriftliche Leistung vom Typ \u201e'+kTyp+'\u201c vorhanden.':''));
+  const pts=(s,a)=>{const v=a.e&&a.e[s.id];return v===undefined||v===null||isNaN(v)?null:+v};
+  const nps=s=>as.map(a=>{const p=pts(s,a);return p===null?null:npOf(a,p)});
+  const avg=s=>{const n=nps(s).filter(x=>x!==null);return n.length?n.reduce((x,y)=>x+y,0)/n.length:null};
+  const cmp=(a,b)=>a.localeCompare(b,'de',{sensitivity:'base'});
+  const key=s=>{const k=kSort.k;
+    if(k==='v')return s.vorname;if(k==='n')return s.nachname;
+    if(k==='g'){const i=NOTEN.indexOf(normN((s.gesamtnotenKA||{})[kTyp]));return i<0?null:i}
+    if(k==='a'){const v=avg(s);return v===null?null:-v}
+    const n=nps(s)[+k.slice(1)];return n===null||n===undefined?null:-n};
+  const rows=grp.st.slice().sort((x,y)=>{
+    const a=key(x),b=key(y);
+    if(a===null&&b!==null)return 1;if(b===null&&a!==null)return -1;
+    let c=0;if(a!==null)c=(typeof a==='number')?a-b:cmp(String(a),String(b));
+    return (c*kSort.d)||cmp(x.nachname,y.nachname)||cmp(x.vorname,y.vorname)});
+  const cols=[['v','Vorname'],['n','Nachname'],['g','Gesamtnote '+(kTyp==='Alle'?'(alle Typen)':'('+TKURZ[kTyp]+')')],['a','\u00d8 Notenpunkte'],['t','\u00d8 Note']];
+  cols.forEach(([k,t])=>{const h=document.createElement('th');h.textContent=t+(kSort.k===k||(k==='t'&&kSort.k==='a')?(kSort.d>0?' \u25b2':' \u25bc'):'');
+    h.onclick=()=>{const kk=k==='t'?'a':k;if(kSort.k===kk)kSort.d*=-1;else kSort={k:kk,d:1};renderK()};th.appendChild(h)});
+  as.forEach((a,j)=>{
+    const h=document.createElement('th');h.title=a.art+': '+(a.thema||'ohne Thema')+(a.datum?' ('+fmtD(a.datum)+')':'');
+    h.append(TKURZ[a.art]+' '+(a.datum?a.datum.split('-').reverse().slice(0,2).join('.')+'.':'?')+(kSort.k==='A'+j?(kSort.d>0?' \u25b2':' \u25bc'):''));
+    const sm=document.createElement('small');sm.textContent=(a.thema||'ohne Thema')+' \u00b7 max. '+fmtN(a.punkte)+' P.';h.appendChild(sm);
+    h.onclick=()=>{if(kSort.k==='A'+j)kSort.d*=-1;else kSort={k:'A'+j,d:1};renderK()};th.appendChild(h)});
+  rows.forEach(s=>{
+    const tr=tb.insertRow();tr.insertCell().textContent=s.vorname;tr.insertCell().textContent=s.nachname;
+    const wn=document.createElement('span');wn.className='wn';
+    const chk=()=>{
+      const v=avg(s),g=gp((s.gesamtnotenKA||{})[kTyp]),r=v===null?null:Math.max(0,Math.min(15,Math.round(v))),bad=r!==null&&g!==null&&g!==r;
+      wn.textContent=bad?'\u26A0\uFE0F':'';
+      wn.title=bad?'Die Gesamtnote ('+NOTEN[15-g]+', '+g+' P.) entspricht nicht der gerundeten Durchschnittsnote ('+NOTEN[15-r]+', '+r+' P.; \u00d8 '+fmtN(v)+' P.)':'';
+      if(bad)bads.add(s.id);else bads.delete(s.id);
+      const n=bads.size;$('kwarn').textContent=n?'\u26A0\uFE0F Bei '+n+(n===1?' Sch\u00fcler':' Sch\u00fclern')+' entspricht die Gesamtnote nicht der gerundeten Durchschnittsnote.':'';
+    };
+    const gparts=gradeInput(()=>(s.gesamtnotenKA||{})[kTyp],v=>{(s.gesamtnotenKA=s.gesamtnotenKA||{})[kTyp]=v;chk()},'Gesamtnote '+kTyp);
+    tr.insertCell().append(...gparts,wn);
+    const cp=tr.insertCell(),cn=tr.insertCell();
+    const updAvg=()=>{const v=avg(s);cp.textContent=v===null?'\u2013':fmtN(v);cn.textContent=v===null?'\u2013':noteOf(v);gparts[0].refresh();chk()};
+    updAvg();
+    as.forEach(a=>{
+      const d=tr.insertCell(),inp=document.createElement('input'),lab=document.createElement('div'),pl=document.createElement('div');
+      inp.type='number';inp.min=0;inp.step=0.5;inp.className='kp';lab.className='kn';pl.className='kn';
+      const p0=pts(s,a);inp.value=p0===null?'':p0;inp.setAttribute('aria-label','Punkte');
+      const upd=()=>{const q=pts(s,a);pl.textContent=q===null?'':fmtN(q/a.punkte*100)+' %';lab.textContent=q===null?'':NOTEN[15-npOf(a,q)]+' ('+npOf(a,q)+')';inp.classList.toggle('over',q!==null&&q>a.punkte)};
+      inp.oninput=()=>{if(inp.value==='')delete a.e[s.id];else{const v=parseFloat(inp.value);if(!(v>=0))return;a.e[s.id]=v}upd();updAvg();renderNS(as);keep()};
+      upd();d.append(inp,pl,lab);
+    });
+  });
+  renderNS(as);
+}
+let nsSel='all',nsMode='p';
+document.querySelectorAll('#nsmode .b').forEach(b=>b.onclick=()=>{nsMode=b.dataset.m;renderK()});
+$('nssel').onchange=e=>{nsSel=e.target.value;renderK()};
+function renderNS(as){
+  const sel=$('nssel');sel.textContent='';
+  sel.add(new Option('Alle Leistungen'+(kTyp==='Alle'?'':' ('+kTyp+')'),'all'));
+  as.forEach(a=>sel.add(new Option(a.art+': '+(a.thema||'ohne Thema')+(a.datum?' ('+fmtD(a.datum)+')':''),a.id)));
+  if(nsSel!=='all'&&!as.some(a=>String(a.id)===String(nsSel)))nsSel='all';
+  sel.value=nsSel;
+  document.querySelectorAll('#nsmode .b').forEach(b=>b.classList.toggle('on',b.dataset.m===nsMode));
+  const out=$('nsout');out.textContent='';
+  const src=nsSel==='all'?as:as.filter(a=>String(a.id)===String(nsSel));
+  const nps=[];src.forEach(a=>grp.st.forEach(st=>{const v=a.e&&a.e[st.id];if(v!==undefined&&v!==null&&!isNaN(v))nps.push(npOf(a,+v))}));
+  if(!nps.length){out.textContent='Noch keine Ergebnisse.';return}
+  const gOf=np=>np>=13?1:np>=10?2:np>=7?3:np>=4?4:np>=1?5:6;
+  let labs,cnt;
+  if(nsMode==='p'){labs=[];cnt=[];for(let q=15;q>=0;q--){labs.push(String(q));cnt.push(nps.filter(x=>x===q).length)}}
+  else{labs=['1','2','3','4','5','6'];cnt=labs.map((_,i)=>nps.filter(x=>gOf(x)===i+1).length)}
+  const n=nps.length,av=mean(nps),avG=mean(nps.map(gOf)),mx=Math.max(...cnt);
+  const NS='http://www.w3.org/2000/svg',W=Math.max(320,labs.length*38+50),H=220,L=30,T=16,B=34,iw=W-L-8,ih=H-T-B;
+  const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.style.cssText='width:100%;max-width:'+W+'px;height:auto';
+  const el=(t,a,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(x!==undefined)e.textContent=x;svg.appendChild(e);return e};
+  const top=Math.max(mx,1),Y=v=>T+ih-v/top*ih,step=iw/labs.length,bw=Math.min(30,step*.7);
+  for(let v=0;v<=top;v+=Math.max(1,Math.ceil(top/5))){el('line',{x1:L,x2:W-8,y1:Y(v),y2:Y(v),stroke:'var(--bd)'});el('text',{x:L-5,y:Y(v)+4,'text-anchor':'end','font-size':10,fill:'var(--mu)'},v)}
+  labs.forEach((lb,i)=>{const cx=L+step*(i+.5);
+    if(cnt[i]){const r=el('rect',{x:cx-bw/2,y:Y(cnt[i]),width:bw,height:Y(0)-Y(cnt[i]),fill:'var(--ac)',rx:2});const ti=document.createElementNS(NS,'title');ti.textContent=cnt[i]+'\u00d7 '+(nsMode==='p'?lb+' P.':'Note '+lb);r.appendChild(ti);el('text',{x:cx,y:Y(cnt[i])-3,'text-anchor':'middle','font-size':11,fill:'var(--tx)'},cnt[i])}
+    el('text',{x:cx,y:H-B+14,'text-anchor':'middle','font-size':11,fill:'var(--mu)'},lb)});
+  el('text',{x:W/2,y:H-4,'text-anchor':'middle','font-size':10,fill:'var(--mu)'},nsMode==='p'?'Notenpunkte':'Note');
+  const info=document.createElement('p');
+  info.textContent='Anzahl Ergebnisse: '+n+' \u00b7 \u00d8 Notenpunkte: '+fmtN(av)+' ('+noteOf(av)+') \u00b7 \u00d8 Note: '+fmtN(avG).replace(/^/,'')+(nsMode==='n'?'':' (aus gerundeten Noten)');
+  // table
+  const tb=document.createElement('table');tb.className='nst';
+  const r1=tb.insertRow(),r2=tb.insertRow(),r3=tb.insertRow();
+  [[r1,nsMode==='p'?'Notenpunkte':'Note'],[r2,'Anzahl'],[r3,'Anteil']].forEach(([r,t])=>{const c=r.insertCell();c.textContent=t;c.style.fontWeight=600});
+  labs.forEach((lb,i)=>{r1.insertCell().textContent=lb;r2.insertCell().textContent=cnt[i];r3.insertCell().textContent=fmtN(cnt[i]/n*100)+' %'});
+  const w=document.createElement('div');w.className='wrap';w.appendChild(tb);
+  out.append(info,svg,w);
+}
+const MP={'+++':14,'++':11,'+':8,'+/-':5,'-':2,'--':0};
+const CATS=['Mitarbeit','Klassenarbeit','SKK','Test','HA-Kontrolle','Sonstige'];
+const defVK=()=>({'Mitarbeit':40,'Klassenarbeit':30,'SKK':10,'Test':5,'HA-Kontrolle':5,'Sonstige':10});
+let VK=defVK(),oSort={k:'n',d:1};
+function loadVK(o){VK=defVK();VK.avgVersteckt={};if(o&&typeof o==='object'){if(o.avgVersteckt&&typeof o.avgVersteckt==='object')CATS.forEach(c=>{if(o.avgVersteckt[c])VK.avgVersteckt[c]=true});CATS.forEach(c=>{const v=parseFloat(o[c]);if(v>=0)VK[c]=v});if(!('Sonstige' in o))VK.Sonstige=0}}
+const gp=t=>{const i=NOTEN.indexOf(normN(t));return i<0?null:15-i};
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const mitAvg=s=>mean(LS.map(l=>rd(l,s.id)).filter(e=>e.a).map(e=>Math.min(15,MP[e.m]+(e.g?1:0))));
+const wAvg=(s,typ)=>{const v=[];AR.forEach(a=>{if(a.art!==typ)return;const p=a.e&&a.e[s.id];if(p!==undefined&&p!==null&&!isNaN(p))v.push(npOf(a,+p))});return mean(v)};
+const catAvg=(s,c)=>c==='Mitarbeit'?mitAvg(s):c==='Sonstige'?slAvg(s):wAvg(s,c);
+const catGesT=(s,c)=>c==='Mitarbeit'?s.gesamtnote:c==='Sonstige'?(s.gesamtnotenSL||{}).Alle:(s.gesamtnotenKA||{})[c];
+const catGes=(s,c)=>gp(catGesT(s,c));
+function jahr(s){
+  let sum=0,w=0;
+  CATS.forEach(c=>{const wt=VK[c];if(!(wt>0))return;const g=catGes(s,c),v=g!==null?g:catAvg(s,c);if(v!==null){sum+=wt*v;w+=wt}});
+  return w>0?sum/w:null;
+}
+const fmtP=v=>v===null?'\u2013':noteOf(v)+' ('+fmtN(v)+')';
+const fmtG=t=>{const p=gp(t);return p===null?'\u2013':normN(t)+' ('+p+' P.)'};
+function renderO(){renderOT()}
+function renderVK(){
+  const tb=$('vkbody');tb.textContent='';
+  const sumTxt=()=>{const t=CATS.reduce((a,c)=>a+(VK[c]||0),0);$('vksum').textContent='Summe: '+fmtN(t)+' %'+(Math.abs(t-100)>1e-9?' (wird beim Berechnen auf 100 % umgerechnet)':'')};
+  VK.avgVersteckt=VK.avgVersteckt||{};
+  CATS.forEach(c=>{
+    const tr=tb.insertRow();tr.insertCell().textContent=CNAME[c]||c;
+    const i=document.createElement('input');i.type='number';i.min=0;i.max=100;i.step=1;i.value=VK[c];i.setAttribute('aria-label','Gewicht '+(CNAME[c]||c));
+    const cb=document.createElement('input');cb.type='checkbox';cb.checked=!VK.avgVersteckt[c];cb.disabled=!(VK[c]>0);cb.setAttribute('aria-label','\u00d8 anzeigen: '+(CNAME[c]||c));
+    i.oninput=()=>{const v=parseFloat(i.value);VK[c]=v>=0?v:0;cb.disabled=!(VK[c]>0);sumTxt();renderOT();keep()};
+    cb.onchange=()=>{if(cb.checked)delete VK.avgVersteckt[c];else VK.avgVersteckt[c]=true;renderOT();keep()};
+    const c1=tr.insertCell();c1.append(i,' %');tr.insertCell().appendChild(cb);
+  });
+  sumTxt();
+}
+$('vkstd').onclick=()=>{const h=VK.avgVersteckt;VK=defVK();VK.avgVersteckt=h||{};renderVK();renderOT();keep()};
+function renderOT(){
+  const tb=$('obody'),h1=$('ohead1'),h2=$('ohead2');tb.textContent='';h1.textContent='';h2.textContent='';
+  const groups=['Schuljahr'].concat(CATS.filter(c=>VK[c]>0)),hid=VK.avgVersteckt||{};
+  const cmp=(a,b)=>a.localeCompare(b,'de',{sensitivity:'base'});
+  const key=(s,k)=>{
+    if(k==='v')return s.vorname;if(k==='n')return s.nachname;
+    let v;
+    if(k==='Jg')v=gp(s.gesamtnoteJahr);else if(k==='Jo')v=jahr(s);
+    else{const c=k.slice(0,-1),t=k.slice(-1);v=t==='g'?catGes(s,c):catAvg(s,c)}
+    return v===null||v===undefined?null:-v;
+  };
+  const rows=grp.st.slice().sort((x,y)=>{
+    const a=key(x,oSort.k),b=key(y,oSort.k);
+    if(a===null&&b!==null)return 1;if(b===null&&a!==null)return -1;
+    let c=0;if(a!==null)c=(typeof a==='number')?a-b:cmp(String(a),String(b));
+    return (c*oSort.d)||cmp(x.nachname,y.nachname)||cmp(x.vorname,y.vorname)});
+  const th=(tr,txt,k,extra)=>{const e=document.createElement('th');e.textContent=txt+(oSort.k===k?(oSort.d>0?' \u25b2':' \u25bc'):'');
+    e.onclick=()=>{if(oSort.k===k)oSort.d*=-1;else oSort={k,d:1};renderOT()};if(extra){for(const a in extra)e[a]=extra[a]}tr.appendChild(e);return e};
+  [['v','Vorname'],['n','Nachname']].forEach(([k,t])=>th(h1,t,k,{rowSpan:2}));
+  groups.forEach((g,gi)=>{
+    const sa=gi===0||!hid[g];const e=document.createElement('th');e.textContent=CNAME[g]||g;e.colSpan=sa?2:1;e.className='gs';h1.appendChild(e);
+    const pre=gi===0?'J':g;
+    th(h2,'Note',pre+'g').className='gs';if(sa)th(h2,'\u00d8',pre+'o');
+  });
+  rows.forEach(s=>{
+    const tr=tb.insertRow();tr.insertCell().textContent=s.vorname;tr.insertCell().textContent=s.nachname;
+    const jc=tr.insertCell();jc.className='gs';
+    const jo=tr.insertCell();jo.className='jo';jo.textContent=fmtP(jahr(s));
+    jc.append(...gradeInput(()=>s.gesamtnoteJahr,v=>{s.gesamtnoteJahr=v},'Gesamtnote Schuljahr',()=>jahr(s)));
+    CATS.filter(c=>VK[c]>0).forEach(c=>{
+      const g=tr.insertCell(),ca=catAvg(s,c),cg=catGes(s,c),dd=(ca!==null&&cg!==null)?Math.abs(cg-ca):0;g.className='gs';g.textContent=fmtG(catGesT(s,c))+(dd>1+1e-9?' ⚠️':'');if(dd>1+1e-9)g.title='Weicht um '+fmtN(dd)+' Notenpunkte vom \u00d8 ab';
+      if(!hid[c])tr.insertCell().textContent=fmtP(catAvg(s,c));
+    });
+  });
+}
+let curLN=null,lnMode='d';
+document.querySelectorAll('#lnmode .b').forEach(b=>b.onclick=()=>{lnMode=b.dataset.m;renderLN()});
+function drawLN(st){
+  document.querySelectorAll('#lnmode .b').forEach(b=>b.classList.toggle('on',b.dataset.m===lnMode));
+  const gr=$('lngraph');$('lndwrap').hidden=lnMode!=='d';gr.hidden=lnMode==='d';gr.textContent='';
+  if(lnMode==='d')return;
+  const NS='http://www.w3.org/2000/svg',W=640,H=300,L=44,R=14,T=14,B=64,iw=W-L-R,ih=H-T-B;
+  const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.style.cssText='width:100%;max-width:720px;height:auto';svg.setAttribute('role','img');
+  const el=(n,a,t)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!==undefined)e.textContent=t;svg.appendChild(e);return e};
+  const Y=v=>T+ih-(v/15)*ih;
+  for(let v=0;v<=15;v+=3){el('line',{x1:L,x2:W-R,y1:Y(v),y2:Y(v),stroke:'var(--bd)','stroke-width':1});el('text',{x:L-6,y:Y(v)+4,'text-anchor':'end','font-size':11,fill:'var(--mu)'},v+' P.')}
+  el('text',{x:4,y:12,'font-size':10,fill:'var(--mu)'},'');
+  let items=[];
+  if(lnMode==='m'){
+    items=LS.slice().sort((a,b)=>(a.d||'').localeCompare(b.d||'')||a.id-b.id).map(l=>{const e=rd(l,st.id);return{lab:l.d?fmtD(l.d).slice(0,5):'?',tip:fmtD(l.d)+(l.t?' – '+l.t:'')+': '+(e.a?e.m+(e.g?' ★ (+1 P.)':''):'abwesend'),v:e.a?Math.min(15,MP[e.m]+(e.g?1:0)):null}});
+    $('lnhint').textContent='';
+  }else{
+    AR.slice().sort((a,b)=>(a.datum||'').localeCompare(b.datum||'')||a.id-b.id).forEach(a=>{const p=a.e&&a.e[st.id];if(p===undefined||p===null||isNaN(p))return;const np=npOf(a,+p);items.push({lab:a.art+(a.thema?' '+a.thema:''),tip:a.art+' '+a.thema+': '+noteOf(np)+' ('+np+' P.)',v:np,c:a.art})});
+    SOL.slice().sort((a,b)=>(a.datum||'').localeCompare(b.datum||'')||a.id-b.id).forEach(x=>{const g=gp((x.n||{})[st.id]);if(g===null)return;items.push({lab:'Sonst. '+(x.thema||x.typ),tip:'Sonstige ('+x.typ+') '+x.thema+': '+x.n+' ('+g+' P.)',v:g,c:'Sonstige'})});
+  }
+  if(!items.length||items.every(i=>i.v===null)){gr.textContent='Noch keine Daten für diese Ansicht.';return}
+  const n=items.length,step=iw/n,col={Klassenarbeit:'#3b7dd8',SKK:'#8a5cc2',Test:'#d98a1c','HA-Kontrolle':'#2a9d8f',Sonstige:'#c2576b'};
+  const trunc=t=>t.length>14?t.slice(0,13)+'…':t;
+  items.forEach((it,i)=>{
+    const cx=L+step*(i+.5);
+    const tx=el('text',{x:cx,y:H-B+14,'font-size':10,fill:'var(--mu)','text-anchor':lnMode==='m'?'middle':'end',transform:lnMode==='m'?'':'rotate(-35 '+cx+' '+(H-B+14)+')'},lnMode==='m'?it.lab:trunc(it.lab));
+    const ti=document.createElementNS(NS,'title');ti.textContent=it.tip;tx.appendChild(ti);
+  });
+  if(lnMode==='s'){
+    const bw=Math.min(48,step*.6);
+    items.forEach((it,i)=>{const cx=L+step*(i+.5),r=el('rect',{x:cx-bw/2,y:Y(it.v),width:bw,height:Math.max(1,Y(0)-Y(it.v)),fill:col[it.c]||'var(--ac)',rx:2});const ti=document.createElementNS(NS,'title');ti.textContent=it.tip;r.appendChild(ti);el('text',{x:cx,y:Y(it.v)-4,'text-anchor':'middle','font-size':11,fill:'var(--tx)'},noteOf(it.v))});
+  }else{
+    let d='',pen=false;const pts=[];
+    items.forEach((it,i)=>{if(it.v===null){pen=false;return}const x=L+step*(i+.5),y=Y(it.v);d+=(pen?'L':'M')+x+' '+y+' ';pen=true;pts.push([x,y,it])});
+    el('path',{d,fill:'none',stroke:'var(--ac)','stroke-width':2});
+    pts.forEach(([x,y,it])=>{const c=el('circle',{cx:x,cy:y,r:4,fill:'var(--ac)'});const ti=document.createElementNS(NS,'title');ti.textContent=it.tip;c.appendChild(ti)});
+  }
+  gr.appendChild(svg);
+  if(lnMode==='m')gr.append(Object.assign(document.createElement('p'),{className:'hint',textContent:'Mitarbeit je Stunde in Notenpunkten (+++ = 14 … -- = 0, Stern = +1 Notenpunkt); abwesende Stunden fehlen im Verlauf.'}));
+  else{const lg=document.createElement('p');lg.className='hint';lg.textContent='Säulenhöhe = Notenpunkte, Beschriftung = Note. Farben: '+Object.keys(col).filter(k=>items.some(i=>i.c===k)).map(k=>({Sonstige:'Sonstige Leistung'}[k]||k)).join(', ')+'.';gr.appendChild(lg)}
+}
+function renderLN(){
+  const sel=$('lnsel');sel.textContent='';
+  const cmp=(a,b)=>a.localeCompare(b,'de',{sensitivity:'base'});
+  const sts=grp.st.slice().sort((x,y)=>cmp(x.nachname,y.nachname)||cmp(x.vorname,y.vorname));
+  sts.forEach(x=>sel.add(new Option(x.vorname+' '+x.nachname,x.id)));
+  if(!sts.some(x=>x.id===curLN))curLN=sts.length?sts[0].id:null;
+  if(curLN!==null)sel.value=curLN;
+  sel.onchange=()=>{curLN=+sel.value;renderLN()};
+  const h1=$('lnh1'),h2=$('lnh2'),tb=$('lnb'),db=$('lndb');[h1,h2,tb,db].forEach(e=>e.textContent='');
+  $('lnhint').textContent=sts.length?'':'Keine Schüler in dieser Lerngruppe.';
+  const st=sts.find(x=>x.id===curLN);if(!st)return;
+  const groups=['Schuljahr'].concat(CATS.filter(c=>VK[c]>0)),hid=VK.avgVersteckt||{};
+  const th=(tr,t,x)=>{const e=document.createElement('th');e.textContent=t;if(x)for(const k in x)e[k]=x[k];tr.appendChild(e);return e};
+  const vsum=CATS.reduce((a,k)=>a+(VK[k]||0),0)||1;
+  groups.forEach((g,gi)=>{const sa=gi===0||!hid[g];const hh=th(h1,CNAME[g]||g,{colSpan:sa?2:1});hh.className='gs';if(gi>0){const sm=document.createElement('small');sm.className='pc';sm.textContent=fmtN(VK[g]/vsum*100)+' %';hh.append(document.createElement('br'),sm)}th(h2,'Note').className='gs';if(sa)th(h2,'\u00d8')});
+  const tr=tb.insertRow();
+  let c=tr.insertCell();c.className='gs';c.textContent=fmtG(st.gesamtnoteJahr);
+  c=tr.insertCell();c.className='jo';c.textContent=fmtP(jahr(st));
+  CATS.filter(k=>VK[k]>0).forEach(k=>{
+    const ca=catAvg(st,k),cg=catGes(st,k),dd=(ca!==null&&cg!==null)?Math.abs(cg-ca):0;
+    const g=tr.insertCell();g.className='gs';g.textContent=fmtG(catGesT(st,k))+(dd>1+1e-9?' ⚠️':'');
+    if(!hid[k])tr.insertCell().textContent=fmtP(ca);
+  });
+  const add=(b,d,t,r)=>{const q=db.insertRow();[b,d?fmtD(d):'',t||'',r].forEach(v=>{q.insertCell().textContent=v})};
+  LS.slice().sort((a,b)=>(a.d||'').localeCompare(b.d||'')||a.id-b.id).forEach(l=>{
+    const e=rd(l,st.id);
+    add('Mitarbeit',l.d,l.t,e.a?('Mitarbeit '+e.m+(e.g?' ★':'')+' · Benehmen '+(e.b||'')+(e.h?' ♥':'')):'n.a. (abwesend)');
+  });
+  AR.slice().sort((a,b)=>(a.datum||'').localeCompare(b.datum||'')||a.id-b.id).forEach(a=>{
+    const p=a.e&&a.e[st.id];
+    add(a.art,a.datum,a.thema,(p===undefined||p===null||isNaN(p))?'\u2013':fmtN(+p)+' / '+fmtN(a.punkte)+' P. ('+fmtN(+p/a.punkte*100)+' %) \u2192 '+noteOf(npOf(a,+p)));
+  });
+  SOL.slice().sort((a,b)=>(a.datum||'').localeCompare(b.datum||'')||a.id-b.id).forEach(x=>{
+    const n=(x.n||{})[st.id];add('Sonstige ('+x.typ+')',x.datum,x.thema,n?n:'\u2013');
+  });
+  drawLN(st);
+  if(!db.rows.length){const q=db.insertRow(),z=q.insertCell();z.colSpan=4;z.textContent='Noch keine Leistungen erfasst.'}
+}
+const STYPEN=['mündlich','schriftlich'],CNAME={'Sonstige':'Sonstige Leistungen'};
+let SOL=[],curSL=null,slid=1,slTyp='mündlich',slSort={k:'n',d:1};
+const getSL=()=>SOL.find(x=>x.id===curSL);
+const sortedSL=()=>SOL.slice().sort((a,b)=>(b.datum||'').localeCompare(a.datum||'')||b.id-a.id);
+function serSL(){const ids=new Set(grp.st.map(s=>s.id));return SOL.map(x=>({typ:x.typ,thema:x.thema,datum:x.datum,noten:Object.entries(x.n||{}).filter(([id,v])=>ids.has(+id)&&v).map(([id,v])=>({schueler:+id,note:v}))}))}
+function loadSL(arr){
+  SOL=[];slid=1;
+  (Array.isArray(arr)?arr:[]).forEach(q=>{
+    const n={};(Array.isArray(q.noten)?q.noten:[]).forEach(r=>{const id=+r.schueler,t=normN(r.note);if(id>0&&NOTEN.includes(t))n[id]=t});
+    SOL.push({id:slid++,typ:STYPEN.includes(q.typ)?q.typ:'mündlich',thema:String(q.thema||''),datum:String(q.datum||''),n});
+  });
+  curSL=SOL.length?sortedSL()[0].id:null;
+}
+function mapGSL(s){const src=s.gesamtnotenSL&&typeof s.gesamtnotenSL==='object'?s.gesamtnotenSL:{},o={};STYPEN.concat('Alle').forEach(t=>{if(src[t])o[t]=String(src[t])});return o}
+const slAvgOf=(s,items)=>mean(items.map(x=>gp((x.n||{})[s.id])).filter(v=>v!==null));
+const slAvg=s=>slAvgOf(s,SOL);
+function fillB(){
+  const sel=$('bsel');sel.textContent='';
+  sortedSL().forEach(x=>sel.add(new Option((x.datum?fmtD(x.datum)+' – ':'')+x.typ+': '+(x.thema||'(ohne Thema)'),x.id)));
+  sel.value=curSL==null?'':curSL;
+}
+function renderSLset(){
+  fillB();const x=getSL();
+  $('bsel').disabled=!x;$('bdel').disabled=!x;$('bbody').style.display=x?'':'none';
+  $('bhint').textContent=x?'':'Noch keine sonstige Leistung angelegt: mit „+ Neu“ beginnen.';
+  if(!x)return;
+  $('btyp').value=x.typ;$('bt').value=x.thema;$('bd').value=x.datum;
+}
+$('bsel').onchange=e=>{curSL=+e.target.value;renderSLset()};
+$('bnew').onclick=()=>{
+  const x={id:slid++,typ:slTyp==='Alle'?'mündlich':slTyp,thema:'',datum:new Date().toLocaleDateString('sv-SE'),n:{}};
+  SOL.push(x);curSL=x.id;keep();renderSLset();$('bt').focus();
+};
+$('bdel').onclick=()=>{
+  const b=$('bdel');
+  if(!b.dataset.arm){b.dataset.arm=1;b.textContent='Sicher?';setTimeout(()=>{delete b.dataset.arm;b.textContent='Löschen'},3000);return}
+  delete b.dataset.arm;b.textContent='Löschen';
+  SOL=SOL.filter(x=>x.id!==curSL);curSL=SOL.length?sortedSL()[0].id:null;keep();renderSLset();
+};
+$('btyp').onchange=e=>{getSL().typ=e.target.value;fillB();keep()};
+$('bt').oninput=e=>{getSL().thema=e.target.value;fillB();keep()};
+$('bd').oninput=e=>{getSL().datum=e.target.value;fillB();keep()};
+$('sltyp').onchange=e=>{slTyp=e.target.value;renderSLtab()};
+function renderSLtab(){
+  const ft=$('sltyp');if(!ft.children.length){STYPEN.forEach(t=>ft.add(new Option(t,t)));ft.add(new Option('Alle Typen','Alle'))}ft.value=slTyp;
+  const bads=new Set();$('slwarn').textContent='';
+  const tb=$('slbody'),th=$('slhead');tb.textContent='';th.textContent='';
+  const items=SOL.filter(x=>slTyp==='Alle'||x.typ===slTyp).sort((a,b)=>(a.datum||'').localeCompare(b.datum||'')||a.id-b.id);
+  $('slhint').textContent=!grp.st.length?'Noch keine Schüler: bitte unter „⚙️ Einstellungen“ anlegen.':(!SOL.length?'Noch keine sonstige Leistung: bitte unter „⚙️ Einstellungen › Sonstige Leistungen“ anlegen.':(!items.length?'Keine sonstige Leistung vom Typ „'+slTyp+'“ vorhanden.':''));
+  const cmp=(a,b)=>a.localeCompare(b,'de',{sensitivity:'base'});
+  const key=s=>{const k=slSort.k;
+    if(k==='v')return s.vorname;if(k==='n')return s.nachname;
+    if(k==='g'){const i=NOTEN.indexOf(normN((s.gesamtnotenSL||{})[slTyp]));return i<0?null:i}
+    if(k==='a'){const v=slAvgOf(s,items);return v===null?null:-v}
+    const x=items[+k.slice(1)];if(!x)return null;const v=gp((x.n||{})[s.id]);return v===null?null:-v};
+  const rows=grp.st.slice().sort((x,y)=>{
+    const a=key(x),b=key(y);
+    if(a===null&&b!==null)return 1;if(b===null&&a!==null)return -1;
+    let c=0;if(a!==null)c=(typeof a==='number')?a-b:cmp(String(a),String(b));
+    return (c*slSort.d)||cmp(x.nachname,y.nachname)||cmp(x.vorname,y.vorname)});
+  const cols=[['v','Vorname'],['n','Nachname'],['g','Gesamtnote '+(slTyp==='Alle'?'(alle Typen)':'('+slTyp+')')],['a','Ø Notenpunkte'],['t','Ø Note']];
+  cols.forEach(([k,t])=>{const h=document.createElement('th');h.textContent=t+(slSort.k===k||(k==='t'&&slSort.k==='a')?(slSort.d>0?' ▲':' ▼'):'');
+    h.onclick=()=>{const kk=k==='t'?'a':k;if(slSort.k===kk)slSort.d*=-1;else slSort={k:kk,d:1};renderSLtab()};th.appendChild(h)});
+  items.forEach((x,j)=>{
+    const h=document.createElement('th');h.title=x.typ+': '+(x.thema||'ohne Thema')+(x.datum?' ('+fmtD(x.datum)+')':'');
+    h.append((x.datum?x.datum.split('-').reverse().slice(0,2).join('.')+'.':'?')+(slSort.k==='A'+j?(slSort.d>0?' ▲':' ▼'):''));
+    const sm=document.createElement('small');sm.textContent=(x.thema||'ohne Thema')+' · '+x.typ;h.appendChild(sm);
+    h.onclick=()=>{if(slSort.k==='A'+j)slSort.d*=-1;else slSort={k:'A'+j,d:1};renderSLtab()};th.appendChild(h)});
+  rows.forEach(s=>{
+    const tr=tb.insertRow();tr.insertCell().textContent=s.vorname;tr.insertCell().textContent=s.nachname;
+    const wn=document.createElement('span');wn.className='wn';
+    const chk=()=>{
+      const v=slAvgOf(s,items),g=gp((s.gesamtnotenSL||{})[slTyp]),r=v===null?null:Math.max(0,Math.min(15,Math.round(v))),bad=r!==null&&g!==null&&g!==r;
+      wn.textContent=bad?'⚠️':'';
+      wn.title=bad?'Die Gesamtnote ('+NOTEN[15-g]+', '+g+' P.) entspricht nicht der gerundeten Durchschnittsnote ('+NOTEN[15-r]+', '+r+' P.; Ø '+fmtN(v)+' P.)':'';
+      if(bad)bads.add(s.id);else bads.delete(s.id);
+      const n=bads.size;$('slwarn').textContent=n?'⚠️ Bei '+n+(n===1?' Schüler':' Schülern')+' entspricht die Gesamtnote nicht der gerundeten Durchschnittsnote.':'';
+    };
+    tr.insertCell().append(...gradeInput(()=>(s.gesamtnotenSL||{})[slTyp],v=>{(s.gesamtnotenSL=s.gesamtnotenSL||{})[slTyp]=v;chk()},'Gesamtnote '+slTyp),wn);
+    const cp=tr.insertCell(),cn=tr.insertCell();
+    const updAvg=()=>{const v=slAvgOf(s,items);cp.textContent=v===null?'–':fmtN(v);cn.textContent=v===null?'–':noteOf(v);chk()};
+    items.forEach(x=>{
+      tr.insertCell().append(...gradeInput(()=>(x.n||{})[s.id],v=>{x.n=x.n||{};const t=normN(v);if(NOTEN.includes(t))x.n[s.id]=t;else delete x.n[s.id];updAvg()},'Note '+(x.thema||'sonstige Leistung')));
+    });
+    updAvg();
+  });
+}
+$('sback').onclick=()=>show(lastMain);
+$('qlesson').onclick=()=>{show(3);$('lnew').click()};
+$('qwritten').onclick=()=>{show(6);$('anew').click()};
+$('qother').onclick=()=>{show(9);$('bnew').click()};
+$('gbtn').onclick=()=>{$('gmenu').hidden=!$('gmenu').hidden};
+addEventListener('pointerdown',e=>{if(!e.target.closest('#gmenu,#gbtn'))$('gmenu').hidden=true},true);
 let LS=[],curL=null,lid=1;
 const MIT=['+++','++','+','+/-','-','--'],MC={'+++':'A','++':'A','+':'B','+/-':'C','-':'D','--':'E'},SC=['A','C','D','E'];
 const getL=()=>LS.find(l=>l.id===curL);
@@ -283,8 +900,8 @@ function loadL(a){
   curL=LS.length?sorted()[0].id:null;
 }
 const pop=$('pop'),closePop=()=>{pop.hidden=true};
-function openPop(btn,opts,clsOf,cur,cb,lab){
-  pop.textContent='';
+function openPop(btn,opts,clsOf,cur,cb,lab,cols){
+  pop.textContent='';pop.className=cols?'g'+cols:'';
   opts.forEach(o=>{const b=document.createElement('button');b.className='vb '+clsOf(o);b.textContent=lab?lab(o):(FULL[o]||o);if(o===cur)b.style.outline='2px solid var(--ac)';b.onclick=()=>{closePop();cb(o)};pop.appendChild(b)});
   pop.hidden=false;
   const r=btn.getBoundingClientRect(),h=pop.offsetHeight;
@@ -361,11 +978,11 @@ function renderU(){
   const ls=LS.slice().sort((a,b)=>(a.d||'').localeCompare(b.d||'')||a.id-b.id);
   const rows=grp.st.map(s=>{
     const cells=ls.map(l=>{const v=rd(l,s.id);return v.a?{l,s,g:GR[v.m],m:v.m,star:v.g,b:v.b}:{na:1,b:v.b}});
-    const gs=cells.filter(c=>!c.na).map(c=>c.g);
+    const gs=cells.filter(c=>!c.na).map(c=>Math.max(2/3,c.g-(c.star?1/3:0)));
     return {s,cells,avg:gs.length?gs.reduce((a,b)=>a+b,0)/gs.length:null};
   });
   const cmp=(a,b)=>a.localeCompare(b,'de',{sensitivity:'base'});
-  const gnum=s=>{const t=(s.gesamtnote||'').trim().replace(',','.');if(t==='')return null;const n=parseFloat(t);return isNaN(n)?t:n};
+  const gnum=s=>{const t=normN(s.gesamtnote);if(t==='')return null;if(NOTEN.includes(t))return NOTEN.indexOf(t);const n=parseFloat(t.replace(',','.'));return isNaN(n)?t:20+n};
   const key=r=>{const k=uSort.k;
     if(k==='v')return r.s.vorname;if(k==='n')return r.s.nachname;
     if(k==='g')return gnum(r.s);if(k==='a')return r.avg;
@@ -382,8 +999,7 @@ function renderU(){
     h.onclick=()=>{if(uSort.k===k)uSort.d*=-1;else uSort={k,d:1};renderU()};th.appendChild(h)});
   rows.forEach(r=>{
     const tr=tb.insertRow();tr.insertCell().textContent=r.s.vorname;tr.insertCell().textContent=r.s.nachname;
-    const c=tr.insertCell(),inp=document.createElement('input');inp.className='gn';inp.value=r.s.gesamtnote||'';inp.setAttribute('aria-label','Gesamtnote');
-    inp.oninput=()=>{r.s.gesamtnote=inp.value;keep()};c.appendChild(inp);
+    tr.insertCell().append(...gradeInput(()=>r.s.gesamtnote,v=>{r.s.gesamtnote=v},'Gesamtnote (m\u00fcndlich)',()=>mitAvg(r.s)));
     tr.insertCell().textContent=r.avg===null?'\u2013':r.avg.toFixed(2).replace('.',',');
     r.cells.forEach(x=>{
       const d=tr.insertCell(),cl=[],tt=[];
@@ -464,14 +1080,15 @@ $('ldel').onclick=()=>{
 };
 $('ld').oninput=e=>{getL().d=e.target.value;keep();fillSel()};
 $('lt').oninput=e=>{getL().t=e.target.value;keep();fillSel()};
+const stamp=()=>{const d=new Date(),z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}-${z(d.getHours())}${z(d.getMinutes())}`};
 $('save').onclick=async()=>{
-  const txt=JSON.stringify(ser(),null,1);
-  if(DL){try{await DL.save({filename:'sitzplan.json',data:new Blob([txt],{type:'application/json'})})}catch(e){}}
+  const txt=JSON.stringify(fullSer(),null,1);
+  if(DL){try{await DL.save({filename:'StudyGroup'+stamp()+'.json',data:new Blob([txt],{type:'application/json'})})}catch(e){}}
   else{$('out').value=txt;$('dlg').showModal()}
 };
 function doLoad(txt){
-  try{apply(JSON.parse(txt));render();renderSt();renderL();renderU();renderS();$('msg').textContent='Sitzplan geladen.';$('ldlg').close()}
-  catch(x){$('lmsg').textContent='Das hat nicht geklappt: Es ist kein gültiger Sitzplan (JSON).'}
+  try{loadAll(JSON.parse(txt));keep();show(curN);$('msg').textContent='Daten geladen.';$('ldlg').close()}
+  catch(x){$('lmsg').textContent='Das hat nicht geklappt: Es ist keine gültige StudyGroup-Datei (JSON).'}
 }
 $('load').onclick=()=>{
   $('lmsg').textContent='';$('lin').value='';$('file').value='';
@@ -486,6 +1103,9 @@ $('file').onchange=e=>{
 };
 $('lgo').onclick=()=>doLoad($('lin').value);
 (async()=>{try{DL=await window.claude?.use('downloads')}catch(e){}})();
-try{const s=localStorage.getItem('sitzplan2');s?apply(JSON.parse(s)):std()}catch(e){std()}
-render();renderSt();
+try{const raw=localStorage.getItem('sitzplan3')||localStorage.getItem('sitzplan2');if(!raw)throw 0;loadAll(JSON.parse(raw))}catch(e){GROUPS=[];gnext=1;freshG()}
+NOTEN.forEach(n=>$('notenlist').appendChild(new Option('',n)));
+show(0);
 </script></body></html>
+
+</body></html>
