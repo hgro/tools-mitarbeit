@@ -204,6 +204,7 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 <div class="row" id="lmeta" style="margin-top:8px">
 <label>Datum <input type="date" id="ld"></label>
 <label>Thema <input id="lt" size="40" placeholder="Stundenthema"></label></div>
+<div class="row" id="limp" style="margin-top:8px"><label>Noten importieren <input id="limpt" size="46" placeholder="z. B. 2,3,,4,1,5 (leer = abwesend)"></label><button class="b" id="limpb">Importieren</button><span class="hint" id="limpm"></span></div>
 <p class="hint" id="lhint"></p></div>
 <div id="lbody"><div class="wrap" id="mwrap"><div id="mroom"></div></div>
 <div class="card" id="mun" style="margin-top:12px"><h2>Ohne Sitzplatz</h2><div id="mubox" class="row"></div></div></div>
@@ -920,10 +921,23 @@ function vbtn(text,cls,opts,clsOf,cb){
   const b=document.createElement('button');b.className='vb '+cls;b.textContent=text;
   b.onclick=()=>openPop(b,opts,clsOf,text,cb);return b;
 }
+$('limpb').onclick=()=>{
+  const l=getL(),m=$('limpm');if(!l)return;
+  const cmp=(a,b)=>a.localeCompare(b,'de',{sensitivity:'base'});
+  const sts=grp.st.slice().sort((x,y)=>cmp(x.nachname,y.nachname)||cmp(x.vorname,y.vorname));
+  const parts=$('limpt').value.split(',').map(x=>x.trim());
+  if(parts.length===1&&parts[0]===''){m.textContent='Bitte Noten eingeben.';return}
+  if(parts.length!==sts.length){m.textContent='Es sind '+parts.length+' Werte, aber '+sts.length+' Schüler (Reihenfolge wie in der Übersicht: Nachname, Vorname). Nichts geändert.';return}
+  const MAPN={'1':'+++','2':'++','3':'+','4':'+/-','5':'-','6':'--'};
+  const bad=parts.findIndex(v=>v!==''&&!(v in MAPN));
+  if(bad>=0){m.textContent='Ungültiger Wert „'+parts[bad]+'“ an Position '+(bad+1)+' (erlaubt: 1–6 oder leer). Nichts geändert.';return}
+  sts.forEach((st,i)=>{const e=ent(l,st.id);if(parts[i]===''){e.a=false}else{e.a=true;e.m=MAPN[parts[i]]}});
+  keep();m.textContent='';$('limpt').value='';renderL();
+};
 function renderL(){
   const l=getL();fillSel();
   $('lsel').disabled=!l;$('ldel').disabled=!l;
-  $('lmeta').style.display=l?'':'none';$('lbody').style.display=l?'':'none';
+  $('lmeta').style.display=l?'':'none';$('limp').style.display=l?'':'none';$('lbody').style.display=l?'':'none';
   $('lhint').textContent=!l?'Noch keine Stunde angelegt: mit „+ Neue Stunde“ beginnen.':(grp.st.length?'':'Noch keine Schüler: bitte im Tab „Lerngruppe & Schüler“ anlegen.');
   const mr=$('mroom');mr.textContent='';
   if(!l)return;
