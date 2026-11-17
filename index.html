@@ -301,7 +301,7 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 <textarea id="lin" rows="8" cols="40"></textarea>
 <p><button class="b p" id="lgo">Laden</button> <button class="b" onclick="ldlg.close()">Abbrechen</button></p>
 <p id="lmsg" class="hint"></p></dialog>
-<dialog id="dlg"><p>Das Speichern als Datei ist hier nicht verfügbar. Kopiere den JSON-Text:</p><textarea id="out" rows="8" readonly></textarea><p><button class="b" onclick="dlg.close()">Schließen</button></p></dialog>
+<dialog id="dlg"><p id="dlgm">Das direkte Speichern als Datei ist hier nicht verfügbar. Nutze „Datei herunterladen“ oder kopiere den JSON-Text:</p><textarea id="out" rows="8" readonly></textarea><p><button class="b p" id="dlgdl">Datei herunterladen</button> <button class="b" id="dlgcp">Text kopieren</button> <button class="b" onclick="dlg.close()">Schließen</button></p></dialog>
 <script>
 let W=800,H=600,fmt='quer',view='A';const G=10,$=id=>document.getElementById(id),room=$('room');
 let S={tables:[],board:{x:250,y:544,w:300,h:46},desk:{x:672,y:544,w:100,h:46}},grp={name:'',st:[]},selT=null,selS=null,drag=null,nid=1,DL=null;
@@ -1170,9 +1170,21 @@ $('lt').oninput=e=>{getL().t=e.target.value;keep();fillSel()};
 const stamp=()=>{const d=new Date(),z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}-${z(d.getHours())}${z(d.getMinutes())}`};
 $('save').onclick=async()=>{
   const txt=JSON.stringify(fullSer(),null,1);
-  if(DL){try{await DL.save({filename:'StudyGroup'+stamp()+'.json',data:new Blob([txt],{type:'application/json'})})}catch(e){}}
-  else{$('out').value=txt;$('dlg').showModal()}
+  const name='StudyGroup'+stamp()+'.json';
+  if(!DL){try{DL=await window.claude?.use('downloads')}catch(e){}}
+  const fallback=why=>{$('out').value=txt;$('dlgm').textContent=why+' Nutze „Datei herunterladen“ oder kopiere den JSON-Text:';$('dlg').showModal()};
+  if(!DL){fallback('Das direkte Speichern als Datei ist in dieser Ansicht nicht verfügbar.');return}
+  try{await DL.save({filename:name,data:new Blob([txt],{type:'application/json'})});$('msg').textContent='Gespeichert: '+name}
+  catch(e){
+    if(e&&e.code==='declined'){$('msg').textContent='Speichern abgebrochen.';return}
+    fallback('Das Speichern wurde nicht ausgeführt'+(e&&e.code?' ('+e.code+')':'')+'.');
+  }
 };
+$('dlgdl').onclick=()=>{
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('out').value],{type:'application/json'}));
+  a.download='StudyGroup'+stamp()+'.json';document.body.appendChild(a);a.click();a.remove();
+};
+$('dlgcp').onclick=async()=>{const o=$('out');o.select();try{await navigator.clipboard.writeText(o.value)}catch(e){document.execCommand('copy')}$('dlgm').textContent='In die Zwischenablage kopiert.'};
 function doLoad(txt){
   try{loadAll(JSON.parse(txt));keep();show(curN);$('msg').textContent='Daten geladen.';$('ldlg').close()}
   catch(x){$('lmsg').textContent='Das hat nicht geklappt: Es ist keine gültige StudyGroup-Datei (JSON).'}
