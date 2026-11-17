@@ -80,7 +80,7 @@ tr.abs td.dis{opacity:.4}tr.abs td:nth-child(2){color:var(--mu)}
 #otab td:first-child{text-align:left;color:inherit;width:auto}#otab td:nth-child(n+3){text-align:center;white-space:nowrap}#otab .gs{border-left:2px solid var(--ac)}#otab .jo{font-weight:700}#otab .gn{width:46px;text-align:center;padding:2px 3px}#otab .np{margin-left:3px;min-width:0}#otab td.dev{background:rgba(240,140,30,.4)}
 #vktab td:first-child{text-align:left;color:inherit;width:auto}#vktab td:nth-child(n+2){text-align:center}#vktab input[type=checkbox]{width:18px;height:18px;accent-color:var(--ac)}#vktab input[type=number]{width:70px}
 #atab td:first-child{text-align:left;color:inherit;width:auto;font-weight:600}#atab td:nth-child(n+2){text-align:center}#atab input{width:72px}
-#mroom{position:relative;background:var(--room);border:2px solid var(--bd);border-radius:8px;overflow:hidden}
+#mwrap{touch-action:pan-x pan-y;max-height:80vh;overflow:auto}#mbox{position:relative}#mroom{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--room);border:2px solid var(--bd);border-radius:8px;overflow:hidden}
 .mseat,.seat.mseat{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:3px;padding:4px 6px;font-weight:400;text-align:left}
 .seat.mseat.free{align-items:center;justify-content:center}
 .lb{font-size:11px;color:var(--mu);white-space:nowrap}
@@ -133,6 +133,9 @@ table td{padding:5px 9px}
 table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6ea}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) table tbody tr:hover{background:#383b44}}
 :root[data-theme="dark"] table tbody tr:hover{background:#383b44}
+.b.on{background:var(--seat);border-color:var(--ac);font-weight:600}
+.tgsw{display:inline-flex;align-items:center;gap:4px;margin-left:8px}.fsw{display:inline-flex;align-items:center;gap:4px;margin-left:8px}.tgsw[hidden]{display:none}
+.noTG .tgcol{display:none}.zbar{display:flex;align-items:center;gap:6px;margin:0 0 8px;flex-wrap:wrap}#zval{min-width:48px;text-align:center}
 </style></head><body>
 <header class="app">
 <div class="top"><div class="brand"><span class="logo">🎓</span><div><b>StudyGroup</b><select id="gsel" aria-label="Lerngruppe"></select></div></div>
@@ -167,7 +170,7 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 <div id="sbar" class="sbar" hidden><button class="b" id="sback">← Zurück</button><span>⚙️ Einstellungen › <b id="stitle"></b></span></div>
 <section id="p0" hidden><div id="tiles" class="tiles"></div></section>
 <section id="p1">
-<div id="gname"></div>
+<div class="row" style="margin-bottom:6px"><div id="gname"></div><span class="tgsw" hidden>Gruppe <button class="b" data-v="A">A</button><button class="b" data-v="B">B</button></span></div>
 <div class="lay"><div class="wrap"><div id="room"></div></div>
 <aside class="card" id="slist"><h2>Schüler</h2><div id="chips"></div>
 <p class="hint">Namen auf einen Platz ziehen. Bereits gesetzte Schüler werden umgesetzt (bei belegtem Platz: Tausch). Mit dem × am Namensfeld entfernst du die Zuordnung. Alternativ: besetzten Platz anklicken und danach einen anderen Platz = tauschen.</p></aside></div>
@@ -176,6 +179,7 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 <button class="b" id="add1">+ Einzeltisch</button>
 <button class="b" id="add2">+ Doppeltisch</button>
 <button class="b" id="rot">Gerade/quer</button>
+<span class="fsw">Raum: <button class="b" id="fq">Querformat</button><button class="b" id="fh">Hochformat</button></span>
 <button class="b" id="del">Tisch entfernen</button></div>
 <p class="hint">Tische, Smartboard und Lehrerpult per Ziehen verschieben.</p></div>
 <div class="card"><h2>Verteilen</h2><div class="row">
@@ -188,9 +192,11 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 <section id="p2" hidden>
 <div class="card"><h2>Lerngruppe</h2>
 <label>Bezeichnung <input id="gin" placeholder="z. B. 10b Informatik" size="28"></label>
+<p><label><input type="checkbox" id="gteil"> Teilungsunterricht (Gruppe A / B)</label></p>
+<p class="hint" id="gteilh">Bei Teilungsunterricht hat jeder Schüler eine Gruppe (A oder B). Beide Gruppen nutzen denselben Raumplan, sitzen aber unabhängig voneinander; auf der Sitzordnung und der Mitarbeitsseite wechselst du zwischen A und B. Beim Ausschalten bleibt die Sitzordnung von Gruppe A erhalten, die Plätze von Gruppe B werden geleert.</p>
 <p class="hint">Alle Angaben (Sitzordnung, Schüler, Stunden, Noten, Sozialverhalten) gehören zur ausgewählten Lerngruppe. Lerngruppen legst du auf der Startseite (Home) an, wählst sie dort aus und löscht sie dort.</p></div>
 <div class="card"><h2>Schüler (<span id="cnt">0</span>)</h2>
-<table><thead><tr><th>ID</th><th>Vorname</th><th>Nachname</th><th></th></tr></thead><tbody id="stb"></tbody></table>
+<table><thead><tr><th>ID</th><th>Vorname</th><th>Nachname</th><th class="tgcol">Gruppe</th><th></th></tr></thead><tbody id="stb"></tbody></table>
 <p><button class="b" id="addst">+ Schüler hinzufügen</button></p></div>
 <div class="card"><h2>Liste einfügen</h2>
 <p class="hint">Eine Zeile pro Schüler: „Vorname Nachname“ oder „Nachname, Vorname“.</p>
@@ -199,6 +205,7 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 </section>
 <section id="p3" hidden>
 <div class="card"><div class="row">
+<span class="tgsw" hidden>Gruppe <button class="b" data-v="A">A</button><button class="b" data-v="B">B</button></span>
 <label>Stunde <select id="lsel"></select></label>
 <button class="b" id="lnew">+ Neue Stunde</button>
 <button class="b" id="ldel">Stunde löschen</button></div>
@@ -207,7 +214,8 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 <label>Thema <input id="lt" size="40" placeholder="Stundenthema"></label></div>
 <div class="row" id="limp" style="margin-top:8px"><label>Noten importieren <input id="limpt" size="46" placeholder="z. B. 2,3,,4,1,5 (leer = abwesend)"></label><button class="b" id="limpb">Importieren</button><span class="hint" id="limpm"></span></div>
 <p class="hint" id="lhint"></p></div>
-<div id="lbody"><div class="wrap" id="mwrap"><div id="mroom"></div></div>
+<div id="lbody"><div class="zbar"><button class="b" id="zout" aria-label="Verkleinern">−</button><span id="zval">100 %</span><button class="b" id="zin" aria-label="Vergrößern">+</button><button class="b" id="zfit">Einpassen</button><span class="hint">Zoom: zwei Finger auseinander-/zusammenziehen (oder Strg + Mausrad)</span></div>
+<div class="wrap" id="mwrap"><div id="mbox"><div id="mroom"></div></div></div>
 <div class="card" id="mun" style="margin-top:12px"><h2>Ohne Sitzplatz</h2><div id="mubox" class="row"></div></div></div>
 </section>
 <section id="p4" hidden>
@@ -295,7 +303,7 @@ table tbody tr{transition:background .12s}table tbody tr:hover{background:#e4e6e
 <p id="lmsg" class="hint"></p></dialog>
 <dialog id="dlg"><p>Das Speichern als Datei ist hier nicht verfügbar. Kopiere den JSON-Text:</p><textarea id="out" rows="8" readonly></textarea><p><button class="b" onclick="dlg.close()">Schließen</button></p></dialog>
 <script>
-const W=800,H=600,G=10,$=id=>document.getElementById(id),room=$('room');
+let W=800,H=600,fmt='quer',view='A';const G=10,$=id=>document.getElementById(id),room=$('room');
 let S={tables:[],board:{x:250,y:544,w:300,h:46},desk:{x:672,y:544,w:100,h:46}},grp={name:'',st:[]},selT=null,selS=null,drag=null,nid=1,DL=null;
 const snap=v=>Math.round(v/G)*G;
 const dims=t=>{const w=t.rot?64:84,h=t.rot?84:64;return t.rot?{w,h:h*t.n}:{w:w*t.n,h}};
@@ -303,12 +311,29 @@ const dm=o=>o.n?dims(o):o;
 const clampO=o=>{const d=dm(o);o.x=Math.max(0,Math.min(W-d.w,o.x));o.y=Math.max(0,Math.min(H-d.h,o.y))};
 const nm=id=>{const s=grp.st.find(s=>s.id===id);return s?(s.vorname.trim()||'?'):null};
 const full=s=>`${s.id}. ${s.vorname} ${s.nachname}`.trim();
-function add(x,y,n,rot,seats){const t={id:nid++,x,y,n,rot:rot?1:0,seats:seats||Array(n).fill(null)};clampO(t);S.tables.push(t);return t}
-function std(){S.tables=[];selT=null;selS=null;S.board.x=250;S.board.y=544;S.desk.x=672;S.desk.y=544;for(let r=0;r<5;r++)for(let c=0;c<3;c++)add(108+c*208,30+r*90,2,0)}
+function add(x,y,n,rot,seats,alt){const t={id:nid++,x,y,n,rot:rot?1:0,seats:seats||Array(n).fill(null),alt:alt||Array(n).fill(null)};clampO(t);S.tables.push(t);return t}
+function setFmtRaw(f){fmt=f==='hoch'?'hoch':'quer';W=fmt==='hoch'?600:800;H=fmt==='hoch'?800:600}
+function setFmt(f){
+  f=f==='hoch'?'hoch':'quer';if(f===fmt)return;
+  const ow=W,oh=H;setFmtRaw(f);
+  [S.board,S.desk].concat(S.tables).forEach(o=>{o.x=snap(o.x*W/ow);o.y=snap(o.y*H/oh);clampO(o)});
+  render();
+}
+function std(){S.tables=[];selT=null;selS=null;S.board.x=Math.round((W-S.board.w)/2);S.board.y=H-56;S.desk.x=W-128;S.desk.y=H-56;const x0=Math.round((W-584)/2);for(let r=0;r<5;r++)for(let c=0;c<3;c++)add(x0+c*208,30+r*90,2,0)}
+const vis=()=>grp.teil?grp.st.filter(s=>s.tg===view):grp.st;
+const swapSeats=()=>S.tables.forEach(t=>{const a=t.seats;t.seats=t.alt;t.alt=a});
+const seatsA=t=>view==='B'?t.alt:t.seats,seatsB=t=>view==='B'?t.seats:t.alt;
+function setView(v){
+  if(!grp.teil||v===view)return;
+  swapSeats();view=v;selT=null;selS=null;
+  if(curN===3)renderL();else render();keep();
+}
+function updTG(){document.querySelectorAll('.tgsw').forEach(e=>{e.hidden=!grp.teil;e.querySelectorAll('.b').forEach(b=>b.classList.toggle('on',b.dataset.v===view))})}
+document.querySelectorAll('.tgsw .b').forEach(b=>b.onclick=()=>setView(b.dataset.v));
 const order=()=>S.tables.slice().sort((a,b)=>a.y-b.y||a.x-b.x).flatMap(t=>t.seats.map((_,i)=>[t,i]));
 const seatOf=id=>{for(const t of S.tables){const i=t.seats.indexOf(id);if(i>-1)return[t,i]}return null};
-const unassigned=()=>grp.st.filter(s=>!seatOf(s.id));
-const ser=()=>({version:2,lerngruppe:{bezeichnung:grp.name,schueler:grp.st},tische:S.tables.map(t=>({x:t.x,y:t.y,plaetze:t.n,quer:!!t.rot,schueler:t.seats})),tafel:{x:S.board.x,y:S.board.y},pult:{x:S.desk.x,y:S.desk.y},stunden:serL(),schriftlicheLeistungen:serA(),verteilungsschluessel:VK,sonstigeLeistungen:serSL()});
+const unassigned=()=>vis().filter(s=>!seatOf(s.id));
+const ser=()=>({version:2,lerngruppe:{bezeichnung:grp.name,schueler:grp.st},raum:{format:fmt},teilung:{aktiv:!!grp.teil,ansicht:view},tische:S.tables.map(t=>({x:t.x,y:t.y,plaetze:t.n,quer:!!t.rot,schueler:seatsA(t),schuelerB:seatsB(t)})),tafel:{x:S.board.x,y:S.board.y},pult:{x:S.desk.x,y:S.desk.y},stunden:serL(),schriftlicheLeistungen:serA(),verteilungsschluessel:VK,sonstigeLeistungen:serSL()});
 let GROUPS=[],curG=0,gnext=1;
 const stash=()=>{const g=GROUPS.find(x=>x.id===curG);if(g)g.d=ser()};
 const fullSer=()=>{stash();return {version:3,aktiv:curG,lerngruppen:GROUPS.map(g=>Object.assign({id:g.id},g.d))}};
@@ -317,14 +342,19 @@ const keep=()=>{fillG();try{localStorage.setItem('sitzplan3',JSON.stringify(full
 function apply(o){
   if(!o||!Array.isArray(o.tische)||!o.lerngruppe||!Array.isArray(o.lerngruppe.schueler))throw 0;
   grp.name=String(o.lerngruppe.bezeichnung||'');
-  grp.st=o.lerngruppe.schueler.map(s=>({id:+s.id,vorname:String(s.vorname||''),nachname:String(s.nachname||''),gesamtnote:String(s.gesamtnote||''),gesamtnotenKA:mapGN(s),gesamtnotenSL:mapGSL(s),gesamtnoteJahr:String(s.gesamtnoteJahr||''),sozialverhalten:SOZ.includes(s.sozialverhalten)?s.sozialverhalten:''})).filter(s=>s.id>0);
+  grp.st=o.lerngruppe.schueler.map(s=>({id:+s.id,vorname:String(s.vorname||''),nachname:String(s.nachname||''),gesamtnote:String(s.gesamtnote||''),gesamtnotenKA:mapGN(s),gesamtnotenSL:mapGSL(s),gesamtnoteJahr:String(s.gesamtnoteJahr||''),sozialverhalten:SOZ.includes(s.sozialverhalten)?s.sozialverhalten:'',tg:s.tg==='B'?'B':'A'})).filter(s=>s.id>0);
+  grp.teil=!!(o.teilung&&o.teilung.aktiv);view='A';setFmtRaw(o.raum&&o.raum.format);
   const ids=new Set(grp.st.map(s=>s.id));
   S.tables=[];nid=1;
-  o.tische.forEach(q=>{const n=q.plaetze==1?1:2;add(+q.x||0,+q.y||0,n,q.quer,Array.from({length:n},(_,i)=>{const v=q.schueler&&q.schueler[i];return ids.has(v)?v:null}))});
-  [['board',o.tafel],['desk',o.pult]].forEach(([k,v])=>{if(v){S[k].x=+v.x||0;S[k].y=+v.y||0;clampO(S[k])}});
+  const sl=(q,k,n)=>Array.from({length:n},(_,i)=>{const v=q[k]&&q[k][i];return ids.has(v)?v:null});
+  o.tische.forEach(q=>{const n=q.plaetze==1?1:2;add(+q.x||0,+q.y||0,n,q.quer,sl(q,'schueler',n),grp.teil?sl(q,'schuelerB',n):null)});
+  if(grp.teil&&o.teilung.ansicht==='B'){swapSeats();view='B'}
+  [['board',o.tafel],['desk',o.pult]].forEach(([k,v])=>{if(v){S[k].x=+v.x||0;S[k].y=+v.y||0;clampO(S[k])}});S.tables.forEach(clampO);
   loadL(o.stunden);loadA(o.schriftlicheLeistungen||o.klassenarbeiten);loadVK(o.verteilungsschluessel);loadSL(o.sonstigeLeistungen);selT=null;selS=null;$('gin').value=grp.name;
 }
 function render(){
+  room.style.width=W+'px';room.style.height=H+'px';updTG();
+  $('fq').classList.toggle('on',fmt==='quer');$('fh').classList.toggle('on',fmt==='hoch');
   room.querySelectorAll('.tbl,.fix').forEach(e=>e.remove());
   [['board','Tafel / Smartboard'],['desk','Lehrerpult']].forEach(([k,txt])=>{
     const o=S[k],e=document.createElement('div');e.className='fix '+k;e.dataset.k=k;e.textContent=txt;
@@ -338,12 +368,12 @@ function render(){
       e.appendChild(s)});
     room.appendChild(e);
   }
-  $('gname').textContent=grp.name?'Lerngruppe '+grp.name:'';
-  const seated=grp.st.length-unassigned().length;
-  $('info').textContent=grp.st.length?`${seated} von ${grp.st.length} Schülern haben einen Platz · ${S.tables.reduce((a,t)=>a+t.n,0)} Plätze`:'Noch keine Schüler: bitte im Tab „Lerngruppe & Schüler“ anlegen.';
+  $('gname').textContent=(grp.name?'Lerngruppe '+grp.name:'')+(grp.teil?' · Gruppe '+view:'');
+  const seated=vis().length-unassigned().length;
+  $('info').textContent=vis().length?`${seated} von ${vis().length} Schülern haben einen Platz · ${S.tables.reduce((a,t)=>a+t.n,0)} Plätze`:'Noch keine Schüler: bitte im Tab „Lerngruppe & Schüler“ anlegen.';
   $('rot').disabled=$('del').disabled=!selT;
   const box=$('chips');box.textContent='';
-  grp.st.forEach(s=>{const c=document.createElement('div');c.className='chip'+(seatOf(s.id)?' used':'');c.draggable=true;c.textContent=((s.vorname.trim()||'?')+' '+s.nachname).trim();c.title=full(s);c.ondragstart=e=>e.dataTransfer.setData('text/plain',String(s.id));box.appendChild(c)});
+  vis().forEach(s=>{const c=document.createElement('div');c.className='chip'+(seatOf(s.id)?' used':'');c.draggable=true;c.textContent=((s.vorname.trim()||'?')+' '+s.nachname).trim();c.title=full(s);c.ondragstart=e=>e.dataTransfer.setData('text/plain',String(s.id));box.appendChild(c)});
   keep();
 }
 room.addEventListener('pointerdown',e=>{
@@ -386,6 +416,7 @@ room.addEventListener('drop',e=>{
   t.seats[i]=id;selT=t;selS=i;render();
 });
 function addT(n){const k=(S.tables.length%8)*10;selT=add(10+k,20+k,n,0);selS=null;render()}
+$('fq').onclick=()=>setFmt('quer');$('fh').onclick=()=>setFmt('hoch');
 $('add1').onclick=()=>addT(1);
 $('add2').onclick=()=>addT(2);
 $('rot').onclick=()=>{selT.rot^=1;clampO(selT);render()};
@@ -398,24 +429,32 @@ $('rnd').onclick=()=>{
 };
 function renderSt(){
   const tb=$('stb');tb.textContent='';$('cnt').textContent=grp.st.length;
+  $('gteil').checked=!!grp.teil;tb.closest('table').classList.toggle('noTG',!grp.teil);
   grp.st.forEach(s=>{
     const tr=tb.insertRow();tr.insertCell().textContent=s.id;
     ['vorname','nachname'].forEach(k=>{const i=document.createElement('input');i.value=s[k];i.setAttribute('aria-label',k);i.oninput=()=>{s[k]=i.value;keep()};tr.insertCell().appendChild(i)});
+    const gc=tr.insertCell();gc.className='tgcol';const gs=document.createElement('select');gs.setAttribute('aria-label','Gruppe');['A','B'].forEach(v=>gs.add(new Option('Gruppe '+v,v)));gs.value=s.tg==='B'?'B':'A';
+    gs.onchange=()=>{s.tg=gs.value;S.tables.forEach(t=>{t.seats=t.seats.map(v=>v===s.id?null:v);t.alt=t.alt.map(v=>v===s.id?null:v)});keep()};gc.appendChild(gs);
     const b=document.createElement('button');b.className='b';b.textContent='Entfernen';
-    b.onclick=()=>{grp.st=grp.st.filter(x=>x!==s);S.tables.forEach(t=>t.seats=t.seats.map(v=>v===s.id?null:v));renderSt();keep()};
+    b.onclick=()=>{grp.st=grp.st.filter(x=>x!==s);S.tables.forEach(t=>{t.seats=t.seats.map(v=>v===s.id?null:v);t.alt=t.alt.map(v=>v===s.id?null:v)});renderSt();keep()};
     tr.insertCell().appendChild(b);
   });
 }
 const nextId=()=>grp.st.reduce((m,s)=>Math.max(m,s.id),0)+1;
-$('addst').onclick=()=>{grp.st.push({id:nextId(),vorname:'',nachname:''});renderSt();keep();const i=$('stb').querySelectorAll('input');i[i.length-2].focus()};
+$('addst').onclick=()=>{grp.st.push({id:nextId(),vorname:'',nachname:'',tg:'A'});renderSt();keep();const i=$('stb').querySelectorAll('input');i[i.length-2].focus()};
 $('impb').onclick=()=>{
   $('imp').value.split('\n').map(l=>l.trim()).filter(Boolean).forEach(l=>{
     let v,n;if(l.includes(',')){[n,v]=l.split(',').map(x=>x.trim())}else{const p=l.split(/\s+/);v=p.shift();n=p.join(' ')}
-    grp.st.push({id:nextId(),vorname:v||'',nachname:n||''});
+    grp.st.push({id:nextId(),vorname:v||'',nachname:n||'',tg:'A'});
   });
   $('imp').value='';renderSt();keep();
 };
 $('gin').oninput=e=>{grp.name=e.target.value;keep()};
+$('gteil').onchange=e=>{
+  if(e.target.checked){grp.st.forEach(s=>{if(s.tg!=='B')s.tg='A'});grp.teil=true;view='A'}
+  else{if(view==='B'){swapSeats();view='A'}S.tables.forEach(t=>t.alt.fill(null));grp.teil=false}
+  renderSt();keep();
+};
 let lastMain=0,curN=0;
 function show(n){
   closePop();$('gmenu').hidden=true;
@@ -427,7 +466,7 @@ function show(n){
   [renderHome,render,renderSt,renderL,renderU,renderS,renderA,renderK,renderO,renderSLset,renderSLtab,renderLN,renderVK][n]();
 }
 document.querySelectorAll('.tab,[data-s]').forEach(b=>b.onclick=()=>show(+(b.dataset.t||b.dataset.s)));
-function freshG(){grp={name:'',st:[]};LS=[];curL=null;lid=1;AR=[];curA=null;aid=1;VK=defVK();SOL=[];curSL=null;slid=1;nid=1;std();const id=gnext++;GROUPS.push({id,d:ser()});curG=id;$('gin').value=''}
+function freshG(){grp={name:'',st:[],teil:false};view='A';setFmtRaw('quer');LS=[];curL=null;lid=1;AR=[];curA=null;aid=1;VK=defVK();SOL=[];curSL=null;slid=1;nid=1;std();const id=gnext++;GROUPS.push({id,d:ser()});curG=id;$('gin').value=''}
 function loadAll(o){
   if(o&&Array.isArray(o.lerngruppen)){
     const ok=q=>q&&Array.isArray(q.tische)&&q.lerngruppe&&Array.isArray(q.lerngruppe.schueler);
@@ -888,16 +927,17 @@ addEventListener('pointerdown',e=>{if(!e.target.closest('#gmenu,#gbtn'))$('gmenu
 let LS=[],curL=null,lid=1;
 const MIT=['+++','++','+','+/-','-','--'],MC={'+++':'A','++':'A','+':'B','+/-':'C','-':'D','--':'E'},SC=['A','C','D','E'];
 const getL=()=>LS.find(l=>l.id===curL);
+const lvis=l=>!grp.teil||!l.g||l.g===view;
 const sorted=()=>LS.slice().sort((a,b)=>(b.d||'').localeCompare(a.d||'')||b.id-a.id);
 const fmtD=d=>d?d.split('-').reverse().join('.'):'ohne Datum';
 const DEF=()=>({m:'+/-',g:false,a:true,b:'+/-',h:false,k:'keine',t:true,z:''});
-const rd=(l,id)=>l.e[id]||DEF();
+const rd=(l,id)=>{if(l.e[id])return l.e[id];if(grp.teil&&l.g){const s=grp.st.find(x=>x.id===id);if(s&&s.tg!==l.g)return Object.assign(DEF(),{a:false})}return DEF()};
 const ent=(l,id)=>l.e[id]||(l.e[id]=DEF());
 function newLesson(d,t){const l={id:lid++,d,t,e:{}};LS.push(l);return l}
-function serL(){const ids=new Set(grp.st.map(s=>s.id));return LS.map(l=>({datum:l.d,thema:l.t,eintraege:Object.entries(l.e).filter(([id])=>ids.has(+id)).map(([id,v])=>({schueler:+id,mitarbeit:v.m,besonders_gut:v.g,anwesend:v.a,benehmen:v.b,super_benehmen:v.h,hausaufgaben:v.k,material_vorhanden:v.t,verspaetet:v.z||''}))}))}
+function serL(){const ids=new Set(grp.st.map(s=>s.id));return LS.map(l=>({datum:l.d,thema:l.t,gruppe:l.g||'',eintraege:Object.entries(l.e).filter(([id])=>ids.has(+id)).map(([id,v])=>({schueler:+id,mitarbeit:v.m,besonders_gut:v.g,anwesend:v.a,benehmen:v.b,super_benehmen:v.h,hausaufgaben:v.k,material_vorhanden:v.t,verspaetet:v.z||''}))}))}
 function loadL(a){
   LS=[];lid=1;
-  (Array.isArray(a)?a:[]).forEach(q=>{const l=newLesson(String(q.datum||''),String(q.thema||''));
+  (Array.isArray(a)?a:[]).forEach(q=>{const l=newLesson(String(q.datum||''),String(q.thema||''));l.g=q.gruppe==='A'||q.gruppe==='B'?q.gruppe:'';
     (q.eintraege||[]).forEach(v=>{const id=+v.schueler;if(id>0)l.e[id]={m:MIT.includes(v.mitarbeit)?v.mitarbeit:'+/-',g:!!v.besonders_gut,a:v.anwesend!==false,b:BEN.includes(v.benehmen)?v.benehmen:'+/-',h:!!v.super_benehmen,k:HA.includes(v.hausaufgaben)?v.hausaufgaben:(LEG[v.hausaufgaben]||'keine'),t:v.material_vorhanden!==false,z:/^\d{1,2}:\d{2}$/.test(v.verspaetet||'')?v.verspaetet:''}})});
   curL=LS.length?sorted()[0].id:null;
 }
@@ -915,7 +955,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape')closePop()});
 addEventListener('scroll',closePop,true);
 function fillSel(){
   const sel=$('lsel');sel.textContent='';
-  sorted().forEach(l=>sel.add(new Option(fmtD(l.d)+(l.t?' – '+l.t:''),l.id)));
+  sorted().filter(lvis).forEach(l=>sel.add(new Option(fmtD(l.d)+(l.t?' – '+l.t:''),l.id)));
   sel.value=curL==null?'':curL;
 }
 function vbtn(text,cls,opts,clsOf,cb){
@@ -925,7 +965,7 @@ function vbtn(text,cls,opts,clsOf,cb){
 $('limpb').onclick=()=>{
   const l=getL(),m=$('limpm');if(!l)return;
   const cmp=(a,b)=>a.localeCompare(b,'de',{sensitivity:'base'});
-  const sts=grp.st.slice().sort((x,y)=>cmp(x.nachname,y.nachname)||cmp(x.vorname,y.vorname));
+  const sts=vis().slice().sort((x,y)=>cmp(x.nachname,y.nachname)||cmp(x.vorname,y.vorname));
   const parts=$('limpt').value.split(',').map(x=>x.trim());
   if(parts.length===1&&parts[0]===''){m.textContent='Bitte Noten eingeben.';return}
   if(parts.length!==sts.length){m.textContent='Es sind '+parts.length+' Werte, aber '+sts.length+' Schüler (Reihenfolge wie in der Übersicht: Nachname, Vorname). Nichts geändert.';return}
@@ -935,16 +975,45 @@ $('limpb').onclick=()=>{
   sts.forEach((st,i)=>{const e=ent(l,st.id);if(parts[i]===''){e.a=false}else{e.a=true;e.m=MAPN[parts[i]]}});
   keep();m.textContent='';$('limpt').value='';renderL();
 };
+let mz=1;try{const q=parseFloat(localStorage.getItem('sitzplan_mz'));if(q>0)mz=q}catch(e){}
+function applyZ(){
+  const box=$('mbox'),mr=$('mroom');if(!box)return;
+  box.style.width=(W*2+4)*mz+'px';box.style.height=(H*2+4)*mz+'px';
+  mr.style.transform='scale('+mz+')';$('zval').textContent=Math.round(mz*100)+' %';
+}
+function setZ(nz,cx,cy,noSave){
+  nz=Math.max(.2,Math.min(2.5,nz));const w=$('mwrap');if(Math.abs(nz-mz)<1e-4)return;
+  if(cx==null){cx=w.clientWidth/2;cy=w.clientHeight/2}
+  const px=(w.scrollLeft+cx)/mz,py=(w.scrollTop+cy)/mz;
+  mz=nz;applyZ();w.scrollLeft=px*mz-cx;w.scrollTop=py*mz-cy;
+  if(!noSave)try{localStorage.setItem('sitzplan_mz',String(mz))}catch(e){}
+}
+$('zin').onclick=()=>setZ(mz*1.25);$('zout').onclick=()=>setZ(mz/1.25);
+$('zfit').onclick=()=>{const w=$('mwrap');setZ(Math.min((w.clientWidth-2)/(W*2+4),(Math.max(240,innerHeight-w.getBoundingClientRect().top-16))/(H*2+4)))};
+(()=>{
+  const w=$('mwrap');let pin=null;
+  const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+  w.addEventListener('touchstart',e=>{if(e.touches.length===2)pin={d:dist(e.touches)||1,z:mz}},{passive:true});
+  w.addEventListener('touchmove',e=>{
+    if(!pin||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();
+    const r=w.getBoundingClientRect(),t=e.touches;
+    setZ(pin.z*dist(t)/pin.d,(t[0].clientX+t[1].clientX)/2-r.left,(t[0].clientY+t[1].clientY)/2-r.top,true);
+  },{passive:false});
+  w.addEventListener('touchend',e=>{if(pin&&e.touches.length<2){pin=null;try{localStorage.setItem('sitzplan_mz',String(mz))}catch(x){}}});
+  w.addEventListener('wheel',e=>{if(!e.ctrlKey)return;e.preventDefault();const r=w.getBoundingClientRect();setZ(mz*Math.exp(-e.deltaY*.01),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+})();
 function renderL(){
+  updTG();
+  {const c=getL();if(!c||!lvis(c)){const v=sorted().filter(lvis);curL=v.length?v[0].id:null}}
   const l=getL();fillSel();
   $('lsel').disabled=!l;$('ldel').disabled=!l;
   $('lmeta').style.display=l?'':'none';$('limp').style.display=l?'':'none';$('lbody').style.display=l?'':'none';
-  $('lhint').textContent=!l?'Noch keine Stunde angelegt: mit „+ Neue Stunde“ beginnen.':(grp.st.length?'':'Noch keine Schüler: bitte im Tab „Lerngruppe & Schüler“ anlegen.');
+  $('lhint').textContent=!l?'Noch keine Stunde angelegt: mit „+ Neue Stunde“ beginnen.':(vis().length?'':'Noch keine Schüler: bitte im Tab „Lerngruppe & Schüler“ anlegen.');
   const mr=$('mroom');mr.textContent='';
   if(!l)return;
   $('ld').value=l.d;$('lt').value=l.t;
-  const k=Math.max(2,Math.min(2.4,$('mwrap').clientWidth/W));
-  mr.style.width=W*k+'px';mr.style.height=H*k+'px';
+  const k=2;
+  mr.style.width=W*k+'px';mr.style.height=H*k+'px';applyZ();
   [['board','Tafel / Smartboard'],['desk','Lehrerpult']].forEach(([key,txt])=>{
     const o=S[key],e=document.createElement('div');e.className='fix '+key;e.textContent=txt;
     e.style.cssText=`cursor:default;touch-action:auto;left:${o.x*k}px;top:${o.y*k}px;width:${o.w*k}px;height:${o.h*k}px`;mr.appendChild(e)});
@@ -1089,7 +1158,7 @@ function renderS(){
   });
 }
 $('lsel').onchange=e=>{curL=+e.target.value;renderL()};
-$('lnew').onclick=()=>{curL=newLesson(new Date().toLocaleDateString('sv-SE'),'').id;keep();renderL();$('lt').focus()};
+$('lnew').onclick=()=>{const nl=newLesson(new Date().toLocaleDateString('sv-SE'),'');nl.g=grp.teil?view:'';curL=nl.id;keep();renderL();$('lt').focus()};
 $('ldel').onclick=()=>{
   const b=$('ldel');
   if(!b.dataset.arm){b.dataset.arm=1;b.textContent='Wirklich löschen?';setTimeout(()=>{delete b.dataset.arm;b.textContent='Stunde löschen'},3000);return}
