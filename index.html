@@ -88,6 +88,7 @@ tr.abs td.dis{opacity:.4}tr.abs td:nth-child(2){color:var(--mu)}
 .mtop span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mtop input{width:17px;height:17px;margin:0;flex:none;accent-color:var(--ac)}
 .msep{border-top:1px solid var(--bd);margin:1px 0}
 .mln{display:flex;align-items:center;justify-content:space-between;gap:4px}.mgr{display:flex;align-items:center;gap:3px}
+.vb.late{min-width:0;padding:0 5px;font-size:12px;line-height:1.4;margin-left:auto;flex:none;white-space:nowrap}.vb.late.on{background:rgba(240,140,30,.3);border-color:#d98a1c;font-weight:600}
 .vb.sm{min-width:0;padding:1px 5px;font-size:12px;line-height:1.3}.vb.em{font-size:15px;line-height:1.2;padding:1px 6px}
 .vb.ha{min-width:34px;font-size:13px}.ha-gemacht,.ha-zusatz{color:#2f9e6e}.ha-nicht{color:#d32f2f}
 .vb.heart.on{background:rgba(230,80,120,.3);color:#d6336c;border-color:#d6336c}.vb.star.sm{font-size:16px;padding:1px 7px}
@@ -779,7 +780,7 @@ function renderLN(){
   const add=(b,d,t,r)=>{const q=db.insertRow();[b,d?fmtD(d):'',t||'',r].forEach(v=>{q.insertCell().textContent=v})};
   LS.slice().sort((a,b)=>(a.d||'').localeCompare(b.d||'')||a.id-b.id).forEach(l=>{
     const e=rd(l,st.id);
-    add('Mitarbeit',l.d,l.t,e.a?('Mitarbeit '+e.m+(e.g?' ★':'')+' · Benehmen '+(e.b||'')+(e.h?' ♥':'')):'n.a. (abwesend)');
+    add('Mitarbeit',l.d,l.t,e.a?('Mitarbeit '+e.m+(e.g?' ★':'')+(e.z?' · verspätet '+e.z:'')+' · Benehmen '+(e.b||'')+(e.h?' ♥':'')):'n.a. (abwesend)');
   });
   AR.slice().sort((a,b)=>(a.datum||'').localeCompare(b.datum||'')||a.id-b.id).forEach(a=>{
     const p=a.e&&a.e[st.id];
@@ -889,15 +890,15 @@ const MIT=['+++','++','+','+/-','-','--'],MC={'+++':'A','++':'A','+':'B','+/-':'
 const getL=()=>LS.find(l=>l.id===curL);
 const sorted=()=>LS.slice().sort((a,b)=>(b.d||'').localeCompare(a.d||'')||b.id-a.id);
 const fmtD=d=>d?d.split('-').reverse().join('.'):'ohne Datum';
-const DEF=()=>({m:'+/-',g:false,a:true,b:'+/-',h:false,k:'keine',t:true});
+const DEF=()=>({m:'+/-',g:false,a:true,b:'+/-',h:false,k:'keine',t:true,z:''});
 const rd=(l,id)=>l.e[id]||DEF();
 const ent=(l,id)=>l.e[id]||(l.e[id]=DEF());
 function newLesson(d,t){const l={id:lid++,d,t,e:{}};LS.push(l);return l}
-function serL(){const ids=new Set(grp.st.map(s=>s.id));return LS.map(l=>({datum:l.d,thema:l.t,eintraege:Object.entries(l.e).filter(([id])=>ids.has(+id)).map(([id,v])=>({schueler:+id,mitarbeit:v.m,besonders_gut:v.g,anwesend:v.a,benehmen:v.b,super_benehmen:v.h,hausaufgaben:v.k,material_vorhanden:v.t}))}))}
+function serL(){const ids=new Set(grp.st.map(s=>s.id));return LS.map(l=>({datum:l.d,thema:l.t,eintraege:Object.entries(l.e).filter(([id])=>ids.has(+id)).map(([id,v])=>({schueler:+id,mitarbeit:v.m,besonders_gut:v.g,anwesend:v.a,benehmen:v.b,super_benehmen:v.h,hausaufgaben:v.k,material_vorhanden:v.t,verspaetet:v.z||''}))}))}
 function loadL(a){
   LS=[];lid=1;
   (Array.isArray(a)?a:[]).forEach(q=>{const l=newLesson(String(q.datum||''),String(q.thema||''));
-    (q.eintraege||[]).forEach(v=>{const id=+v.schueler;if(id>0)l.e[id]={m:MIT.includes(v.mitarbeit)?v.mitarbeit:'+/-',g:!!v.besonders_gut,a:v.anwesend!==false,b:BEN.includes(v.benehmen)?v.benehmen:'+/-',h:!!v.super_benehmen,k:HA.includes(v.hausaufgaben)?v.hausaufgaben:(LEG[v.hausaufgaben]||'keine'),t:v.material_vorhanden!==false}})});
+    (q.eintraege||[]).forEach(v=>{const id=+v.schueler;if(id>0)l.e[id]={m:MIT.includes(v.mitarbeit)?v.mitarbeit:'+/-',g:!!v.besonders_gut,a:v.anwesend!==false,b:BEN.includes(v.benehmen)?v.benehmen:'+/-',h:!!v.super_benehmen,k:HA.includes(v.hausaufgaben)?v.hausaufgaben:(LEG[v.hausaufgaben]||'keine'),t:v.material_vorhanden!==false,z:/^\d{1,2}:\d{2}$/.test(v.verspaetet||'')?v.verspaetet:''}})});
   curL=LS.length?sorted()[0].id:null;
 }
 const pop=$('pop'),closePop=()=>{pop.hidden=true};
@@ -971,7 +972,10 @@ function ctrl(l,s,box){
   const top=document.createElement('div');top.className='mtop';
   const cb=document.createElement('input');cb.type='checkbox';cb.checked=v.a;cb.title='Anwesend';cb.setAttribute('aria-label','Anwesend');
   cb.onchange=()=>{ent(l,s.id).a=cb.checked;box.classList.toggle('abs',!cb.checked);keep()};
-  const n=document.createElement('span');n.textContent=s.vorname.trim()||'?';top.append(cb,n);
+  const n=document.createElement('span');n.textContent=s.vorname.trim()||'?';
+  const zb=btn('late'+(v.z?' on':''),v.z?'\u23F0 '+v.z:'\u23F0',v.z?'Verspätet seit '+v.z+' – erneut klicken zum Entfernen':'Verspätung eintragen (aktuelle Uhrzeit)');zb.setAttribute('aria-pressed',!!v.z);
+  zb.onclick=()=>{const d=new Date();set('z',v.z?'':String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'))};
+  top.append(cb,n,zb);
   const sep=document.createElement('div');sep.className='msep';
   const mb=btn(MCl(v.m),v.m,'Mitarbeit');mb.onclick=()=>openPop(mb,MIT,MCl,v.m,x=>set('m',x));
   const gb=btn('star'+(v.g?' on':''),v.g?'\u2605':'\u2606','Besonders gute Leistung');gb.setAttribute('aria-pressed',v.g);gb.onclick=()=>set('g',!v.g);
